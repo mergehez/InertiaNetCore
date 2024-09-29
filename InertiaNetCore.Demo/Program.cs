@@ -21,5 +21,14 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseInertia();
+app.UseInertia()
+    .AddSharedData(_ => new Dictionary<string, object?>
+    {
+        ["auth"] = new
+        {
+            Token = "123456789",
+            Username = "Mergehez",
+        }
+    });
+
 app.Run();

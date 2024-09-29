@@ -12,7 +12,7 @@ namespace InertiaNetCore.Extensions;
 
 public static class Configure
 {
-    public static IApplicationBuilder UseInertia(this IApplicationBuilder app)
+    public static InertiaApplicationBuilder UseInertia(this IApplicationBuilder app)
     {
         var factory = app.ApplicationServices.GetRequiredService<IResponseFactory>();
         Inertia.UseFactory(factory);
@@ -33,7 +33,7 @@ public static class Configure
             await next();
         });
 
-        return app;
+        return new InertiaApplicationBuilder(app);
     }
 
     public static IServiceCollection AddInertia(this IServiceCollection services,
