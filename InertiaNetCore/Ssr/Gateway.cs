@@ -10,12 +10,8 @@ internal interface IGateway
     public Task<SsrResponse?> Dispatch(object model, string url);
 }
 
-internal class Gateway : IGateway
+internal class Gateway(IHttpClientFactory httpClientFactory) : IGateway
 {
-    private readonly IHttpClientFactory _httpClientFactory;
-
-    public Gateway(IHttpClientFactory httpClientFactory) => _httpClientFactory = httpClientFactory;
-
     public async Task<SsrResponse?> Dispatch(dynamic model, string url)
     {
         var json = JsonSerializer.Serialize(model,
@@ -26,7 +22,7 @@ internal class Gateway : IGateway
             });
         var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
 
-        var client = _httpClientFactory.CreateClient();
+        var client = httpClientFactory.CreateClient();
         var response = await client.PostAsync(url, content);
         return await response.Content.ReadFromJsonAsync<SsrResponse>();
     }

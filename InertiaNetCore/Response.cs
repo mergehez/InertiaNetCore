@@ -8,77 +8,63 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace InertiaNetCore;
 
-public class Response : IActionResult
+public class Response(string component, object props, string rootView, string? version, Func<InertiaPage?, Task<IActionResult>> jsonResultResolver)
+    : IActionResult
 {
-    private readonly string _component;
-    private readonly object _props;
-    private readonly string _rootView;
-    private readonly string? _version;
-    private readonly Func<ActionContext, InertiaPage?, Task> _jsonResultResolver;
-
-    private ActionContext? _context;
     private InertiaPage? _page;
     private IDictionary<string, object>? _viewData;
     
-    public bool IsInertiaRequest => _context!.IsInertiaRequest();
-
-    public Response(string component, object props, string rootView, string? version, Func<ActionContext, InertiaPage?, Task> jsonResultResolver)
-        => (_component, _props, _rootView, _version, _jsonResultResolver) = (component, props, rootView, version, jsonResultResolver);
-
     public async Task ExecuteResultAsync(ActionContext context)
     {
-        SetContext(context);
-        ProcessResponse();
+        ProcessResponse(context);
 
-        if (!_context!.IsInertiaRequest())
+        if (!context.IsInertiaRequest())
         {
-            await GetView().ExecuteResultAsync(_context!);
+            await GetView(context).ExecuteResultAsync(context);
         }
         else
         {
-            _context!.HttpContext.Response.Headers.Append("X-Inertia", "true");
-            _context!.HttpContext.Response.Headers.Append("Vary", "Accept");
-            _context!.HttpContext.Response.StatusCode = 200;
-            await _jsonResultResolver.Invoke(_context!, _page);
+            context.HttpContext.Response.Headers.Append("X-Inertia", "true");
+            context.HttpContext.Response.Headers.Append("Vary", "Accept");
+            context.HttpContext.Response.StatusCode = 200;
+            await (await jsonResultResolver.Invoke(_page)).ExecuteResultAsync(context);
         }
     }
 
-    protected internal void ProcessResponse()
+    protected internal void ProcessResponse(ActionContext context)
     {
         var page = new InertiaPage
         {
-            Component = _component,
-            Version = _version,
-            Url = _context!.RequestedUri()
+            Component = component,
+            Version = version,
+            Url = context.RequestedUri()
         };
 
-        var partial = _context!.GetPartialData();
-        if (partial.Any() && _context!.IsInertiaPartialComponent(_component))
+        var partial = context.GetPartialData();
+        if (partial.Count != 0 && context.IsInertiaPartialComponent(component))
         {
-            var only = _props.Only(partial);
-            var partialProps = only.ToDictionary(o => o.ToCamelCase(), o =>
-                _props.GetType().GetProperty(o)?.GetValue(_props));
-
-            page.Props = partialProps;
+            page.Props = props.GetType()
+                .GetProperties()
+                .Select(c => c.Name)
+                .Intersect(partial, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(o => o.ToCamelCase(), o => props.GetType().GetProperty(o)?.GetValue(props));
         }
         else
         {
-            var props = _props.GetType().GetProperties()
+            page.Props = props.GetType().GetProperties()
                 .Where(o => o.PropertyType != typeof(LazyProp))
-                .ToDictionary(o => o.Name.ToCamelCase(), o => o.GetValue(_props));
-
-            page.Props = props;
+                .ToDictionary(o => o.Name.ToCamelCase(), o => o.GetValue(props));
         }
 
         page.Props = PrepareProps(page.Props);
 
-        var shared = _context!.HttpContext.Features.Get<InertiaSharedData>();
-        if (shared != null)
+        var shared = context.HttpContext.Features.Get<InertiaSharedData>();
+        if (shared is not null)
             page.Props = shared.GetMerged(page.Props);
 
-        page.Props["errors"] = GetErrors();
+        page.Props["errors"] = GetErrors(context);
 
-        SetPage(page);
+        _page = page;
     }
 
     private static Dictionary<string, object?> PrepareProps(Dictionary<string, object?> props)
@@ -96,37 +82,33 @@ public class Response : IActionResult
         return _page;
     }
 
-    protected internal ViewResult GetView()
+    protected internal ViewResult GetView(ActionContext context)
     {
-        var viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), _context!.ModelState)
+        var viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), context.ModelState)
         {
             Model = _page
         };
 
-        if (_viewData == null) return new ViewResult { ViewName = _rootView, ViewData = viewData };
+        if (_viewData == null) return new ViewResult { ViewName = rootView, ViewData = viewData };
 
         foreach (var (key, value) in _viewData)
             viewData[key] = value;
 
-        return new ViewResult { ViewName = _rootView, ViewData = viewData };
+        return new ViewResult { ViewName = rootView, ViewData = viewData };
     }
     
     // protected internal IActionResult GetResult() => _context!.IsInertiaRequest() 
     //     ? GetPage() 
     //     : GetView();
 
-    private IDictionary<string, string> GetErrors()
+    private IDictionary<string, string> GetErrors(ActionContext context)
     {
-        if (!_context!.ModelState.IsValid)
-            return _context!.ModelState.ToDictionary(o => o.Key.ToCamelCase(),
+        if (!context.ModelState.IsValid)
+            return context.ModelState.ToDictionary(o => o.Key.ToCamelCase(),
                 o => o.Value?.Errors.FirstOrDefault()?.ErrorMessage ?? "");
 
         return new Dictionary<string, string>(0);
     }
-
-    protected internal void SetContext(ActionContext context) => _context = context;
-
-    private void SetPage(InertiaPage inertiaPage) => _page = inertiaPage;
 
     public Response WithViewData(IDictionary<string, object> viewData)
     {

@@ -10,10 +10,10 @@ public class InertiaOptions
 
     public bool SsrEnabled { get; set; } = false;
     public string SsrUrl { get; set; } = "http://127.0.0.1:13714/render";
-    
-    public Func<ActionContext, InertiaPage?, Task> JsonResultResolver { get; set; } = (context, page) => new JsonResult(page, new JsonSerializerOptions
+
+    public Func<InertiaPage?, Task<IActionResult>> JsonResultResolver { get; set; } = page => Task.FromResult<IActionResult>(new JsonResult(page, new JsonSerializerOptions
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         ReferenceHandler = ReferenceHandler.IgnoreCycles
-    }).ExecuteResultAsync(context);
+    }));
 }

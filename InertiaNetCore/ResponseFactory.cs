@@ -23,32 +23,25 @@ internal interface IResponseFactory
     public LazyProp Lazy(Func<object?> callback);
 }
 
-internal class ResponseFactory : IResponseFactory
+internal class ResponseFactory(IHttpContextAccessor contextAccessor, IGateway gateway, IOptions<InertiaOptions> options) : IResponseFactory
 {
-    private readonly IHttpContextAccessor _contextAccessor;
-    private readonly IGateway _gateway;
-    private readonly IOptions<InertiaOptions> _options;
-
     private object? _version;
-
-    public ResponseFactory(IHttpContextAccessor contextAccessor, IGateway gateway, IOptions<InertiaOptions> options) =>
-        (_contextAccessor, _gateway, _options) = (contextAccessor, gateway, options);
 
     public Response Render(string component, object? props = null)
     {
         props ??= new { };
 
-        return new Response(component, props, _options.Value.RootView, GetVersion(), _options.Value.JsonResultResolver);
+        return new Response(component, props, options.Value.RootView, GetVersion(), options.Value.JsonResultResolver);
     }
 
     public async Task<IHtmlContent> Head(dynamic model)
     {
-        if (!_options.Value.SsrEnabled) return new HtmlString("");
+        if (!options.Value.SsrEnabled) return new HtmlString("");
 
-        var context = _contextAccessor.HttpContext!;
+        var context = contextAccessor.HttpContext!;
 
         var response = context.Features.Get<SsrResponse>();
-        response ??= await _gateway.Dispatch(model, _options.Value.SsrUrl);
+        response ??= await gateway.Dispatch(model, options.Value.SsrUrl);
 
         if (response == null) return new HtmlString("");
 
@@ -58,12 +51,12 @@ internal class ResponseFactory : IResponseFactory
 
     public async Task<IHtmlContent> Html(dynamic model)
     {
-        if (_options.Value.SsrEnabled)
+        if (options.Value.SsrEnabled)
         {
-            var context = _contextAccessor.HttpContext!;
+            var context = contextAccessor.HttpContext!;
 
             var response = context.Features.Get<SsrResponse>();
-            response ??= await _gateway.Dispatch(model, _options.Value.SsrUrl);
+            response ??= await gateway.Dispatch(model, options.Value.SsrUrl);
 
             if (response != null)
             {
@@ -97,7 +90,7 @@ internal class ResponseFactory : IResponseFactory
 
     public void Share(string key, object? value)
     {
-        var context = _contextAccessor.HttpContext!;
+        var context = contextAccessor.HttpContext!;
 
         var sharedData = context.Features.Get<InertiaSharedData>();
         sharedData ??= new InertiaSharedData();
@@ -108,7 +101,7 @@ internal class ResponseFactory : IResponseFactory
 
     public void Share(IDictionary<string, object?> data)
     {
-        var context = _contextAccessor.HttpContext!;
+        var context = contextAccessor.HttpContext!;
 
         var sharedData = context.Features.Get<InertiaSharedData>();
         sharedData ??= new InertiaSharedData();

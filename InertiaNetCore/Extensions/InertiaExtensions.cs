@@ -7,28 +7,42 @@ namespace InertiaNetCore.Extensions;
 
 internal static class InertiaExtensions
 {
-    internal static IEnumerable<string> Only(this object obj, IEnumerable<string> only) =>
-        obj.GetType().GetProperties().Select(c => c.Name)
-            .Intersect(only, StringComparer.OrdinalIgnoreCase).ToList();
+    internal static List<string> GetPartialData(this ActionContext context)
+    {
+        return context.HttpContext.Request.Headers.TryGetValue("X-Inertia-Partial-Data", out var data)
+            ? data.FirstOrDefault()?.Split(",")
+                .Where(s => !string.IsNullOrEmpty(s))
+                .ToList() ?? []
+            : [];
+    }
 
-    internal static List<string> GetPartialData(this ActionContext context) =>
-        context.HttpContext.Request.Headers["X-Inertia-Partial-Data"]
-            .FirstOrDefault()?.Split(",")
-            .Where(s => !string.IsNullOrEmpty(s))
-            .ToList() ?? new List<string>();
+    internal static bool IsInertiaPartialComponent(this ActionContext context, string component)
+    {
+        return context.HttpContext.Request.Headers["X-Inertia-Partial-Component"] == component;
+    }
 
-    internal static bool IsInertiaPartialComponent(this ActionContext context, string component) =>
-        context.HttpContext.Request.Headers["X-Inertia-Partial-Component"] == component;
+    internal static string RequestedUri(this HttpContext context)
+    {
+        return Uri.UnescapeDataString(context.Request.GetEncodedPathAndQuery());
+    }
 
-    internal static string RequestedUri(this HttpContext context) =>
-        Uri.UnescapeDataString(context.Request.GetEncodedPathAndQuery());
+    internal static string RequestedUri(this ActionContext context)
+    {
+        return context.HttpContext.RequestedUri();
+    }
 
-    internal static string RequestedUri(this ActionContext context) => context.HttpContext.RequestedUri();
+    internal static bool IsInertiaRequest(this HttpContext context)
+    {
+        return bool.TryParse(context.Request.Headers["X-Inertia"], out _);
+    }
 
-    internal static bool IsInertiaRequest(this HttpContext context) =>
-        bool.TryParse(context.Request.Headers["X-Inertia"], out _);
+    internal static bool IsInertiaRequest(this ActionContext context)
+    {
+        return context.HttpContext.IsInertiaRequest();
+    }
 
-    internal static bool IsInertiaRequest(this ActionContext context) => context.HttpContext.IsInertiaRequest();
-
-    internal static string ToCamelCase(this string s) => JsonNamingPolicy.CamelCase.ConvertName(s);
+    internal static string ToCamelCase(this string s)
+    {
+        return JsonNamingPolicy.CamelCase.ConvertName(s);
+    }
 }
