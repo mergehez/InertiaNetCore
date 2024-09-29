@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InertiaNetCore", "InertiaNetCore\InertiaNetCore.csproj", "{DE60B36C-38F4-40A7-B47C-9CC2D1D2C434}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DE60B36C-38F4-40A7-B47C-9CC2D1D2C434}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE60B36C-38F4-40A7-B47C-9CC2D1D2C434}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE60B36C-38F4-40A7-B47C-9CC2D1D2C434}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE60B36C-38F4-40A7-B47C-9CC2D1D2C434}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
