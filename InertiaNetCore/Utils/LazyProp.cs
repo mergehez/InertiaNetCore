@@ -1,10 +1,11 @@
 namespace InertiaNetCore.Utils;
 
-public class LazyProp
+/// <summary>
+/// NEVER included on standard visits <br/>
+/// OPTIONALLY included on partial reloads (you should call <c>router.reload({ only: ["propName"] })</c>) <br/>
+/// ONLY evaluated when needed
+/// </summary>
+public class LazyProp(Func<object?> callback)
 {
-    private readonly Func<object?> _callback;
-
-    public LazyProp(Func<object?> callback) => _callback = callback;
-
-    public object? Invoke() => _callback.Invoke();
+    public object? Invoke() => callback.Invoke();
 }
