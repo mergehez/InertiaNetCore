@@ -6,7 +6,9 @@
 
 ## Attribution
 
-This library is a fork of [kapi2289/InertiaCore](https://github.com/kapi2289/InertiaCore), but it has some errors fixed and will be maintained actively.
+This library is a fork of [kapi2289/InertiaCore](https://github.com/kapi2289/InertiaCore).
+
+Some errors were fixed, and unnecessary dependencies were removed. The library will be maintained and updated whenever necessary.
 
 ## Table of contents
 
