@@ -24,6 +24,7 @@ internal interface IResponseFactory
 }
 
 internal class ResponseFactory(IHttpContextAccessor contextAccessor, IGateway gateway, IOptions<InertiaOptions> options) : IResponseFactory
+internal class ResponseFactory(IHttpContextAccessor contextAccessor, SsrGateway ssrGateway, IOptions<InertiaOptions> options)
 {
     private object? _version;
 
@@ -42,6 +43,7 @@ internal class ResponseFactory(IHttpContextAccessor contextAccessor, IGateway ga
 
         var response = context.Features.Get<SsrResponse>();
         response ??= await gateway.Dispatch(model, options.Value.SsrUrl);
+        response ??= await ssrGateway.Dispatch(model, options.Value.SsrUrl);
 
         if (response == null) return new HtmlString("");
 
@@ -57,6 +59,7 @@ internal class ResponseFactory(IHttpContextAccessor contextAccessor, IGateway ga
 
             var response = context.Features.Get<SsrResponse>();
             response ??= await gateway.Dispatch(model, options.Value.SsrUrl);
+            response ??= await ssrGateway.Dispatch(model, options.Value.SsrUrl);
 
             if (response != null)
             {

@@ -44,6 +44,7 @@ public static class Configure
 
         services.AddSingleton<IResponseFactory, ResponseFactory>();
         services.AddSingleton<IGateway, Gateway>();
+        services.AddSingleton<SsrGateway>();
 
         services.Configure<MvcOptions>(mvcOptions => { mvcOptions.Filters.Add<InertiaActionFilter>(); });
 
