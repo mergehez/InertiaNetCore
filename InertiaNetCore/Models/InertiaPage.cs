@@ -1,9 +1,9 @@
 namespace InertiaNetCore.Models;
 
-public class InertiaPage
+public readonly record struct InertiaPage()
 {
-    public Dictionary<string, object?> Props { get; set; } = default!;
-    public string Component { get; set; } = default!;
-    public string? Version { get; set; }
-    public string Url { get; set; } = default!;
+    public InertiaProps Props { get; init; } = default!;
+    public string Component { get; init; } = default!;
+    public string? Version { get; init; } = null;
+    public string Url { get; init; } = default!;
 }

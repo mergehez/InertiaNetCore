@@ -1,3 +1,4 @@
+using InertiaNetCore.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
@@ -16,7 +17,7 @@ public class InertiaApplicationBuilder(IApplicationBuilder app): IApplicationBui
 
     public RequestDelegate Build() => app.Build();
 
-    public InertiaApplicationBuilder AddSharedData(Func<HttpContext, Task<IDictionary<string, object?>>> middleware)
+    public InertiaApplicationBuilder AddSharedData(Func<HttpContext, Task<InertiaProps>> middleware)
     {
         app.Use(async (context, next) =>
         {
@@ -29,7 +30,7 @@ public class InertiaApplicationBuilder(IApplicationBuilder app): IApplicationBui
         
         return this;
     }
-    public InertiaApplicationBuilder AddSharedData(Func<HttpContext, IDictionary<string, object?>> middleware)
+    public InertiaApplicationBuilder AddSharedData(Func<HttpContext, InertiaProps> middleware)
     {
         app.Use(async (context, next) =>
         {

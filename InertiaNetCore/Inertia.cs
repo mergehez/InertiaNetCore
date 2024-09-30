@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using InertiaNetCore.Models;
 using InertiaNetCore.Utils;
 using Microsoft.AspNetCore.Html;
 
@@ -8,11 +9,11 @@ namespace InertiaNetCore;
 
 public static class Inertia
 {
-    private static IResponseFactory _factory = default!;
+    private static ResponseFactory _factory = default!;
 
-    internal static void UseFactory(IResponseFactory factory) => _factory = factory;
+    internal static void UseFactory(ResponseFactory factory) => _factory = factory;
 
-    public static Response Render(string component, object? props = null) => _factory.Render(component, props);
+    public static Response Render(string component, InertiaProps? props = default) => _factory.Render(component, props);
 
     public static Task<IHtmlContent> Head(dynamic model) => _factory.Head(model);
 
@@ -26,7 +27,7 @@ public static class Inertia
 
     public static void Share(string key, object? value) => _factory.Share(key, value);
 
-    public static void Share(IDictionary<string, object?> data) => _factory.Share(data);
+    public static void Share(InertiaProps data) => _factory.Share(data);
 
     public static LazyProp Lazy(Func<object?> callback) => _factory.Lazy(callback);
     public static AlwaysProp Always(Func<object?> callback) => _factory.Always(callback);

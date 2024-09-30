@@ -1,6 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using InertiaNetCore.Models;
 using InertiaNetCore.Ssr;
 using InertiaNetCore.Utils;
@@ -10,29 +9,16 @@ using Microsoft.Extensions.Options;
 
 namespace InertiaNetCore;
 
-internal interface IResponseFactory
-{
-    public Response Render(string component, object? props = null);
-    public Task<IHtmlContent> Head(dynamic model);
-    public Task<IHtmlContent> Html(dynamic model);
-    public void Version(object? version);
-    public string? GetVersion();
-    public LocationResult Location(string url);
-    public void Share(string key, object? value);
-    public void Share(IDictionary<string, object?> data);
-    public LazyProp Lazy(Func<object?> callback);
-}
-
-internal class ResponseFactory(IHttpContextAccessor contextAccessor, IGateway gateway, IOptions<InertiaOptions> options) : IResponseFactory
+[SuppressMessage("Performance", "CA1822:Mark members as static")]
 internal class ResponseFactory(IHttpContextAccessor contextAccessor, SsrGateway ssrGateway, IOptions<InertiaOptions> options)
 {
     private object? _version;
 
-    public Response Render(string component, object? props = null)
+    public Response Render(string component, InertiaProps? props = default)
     {
-        props ??= new { };
+        props ??= [];
 
-        return new Response(component, props, options.Value.RootView, GetVersion(), options.Value.JsonResultResolver);
+        return new Response(component, props, options.Value.RootView, GetVersion(), options.Value.JsonSerializerOptions);
     }
 
     public async Task<IHtmlContent> Head(dynamic model)
@@ -41,14 +27,14 @@ internal class ResponseFactory(IHttpContextAccessor contextAccessor, SsrGateway 
 
         var context = contextAccessor.HttpContext!;
 
-        var response = context.Features.Get<SsrResponse>();
-        response ??= await gateway.Dispatch(model, options.Value.SsrUrl);
+        var response = context.Features.Get<SsrResponse?>();
         response ??= await ssrGateway.Dispatch(model, options.Value.SsrUrl);
 
-        if (response == null) return new HtmlString("");
+        if (response.Value == default) 
+            return new HtmlString("");
 
         context.Features.Set(response);
-        return response.GetHead();
+        return response.Value.GetHead();
     }
 
     public async Task<IHtmlContent> Html(dynamic model)
@@ -57,24 +43,17 @@ internal class ResponseFactory(IHttpContextAccessor contextAccessor, SsrGateway 
         {
             var context = contextAccessor.HttpContext!;
 
-            var response = context.Features.Get<SsrResponse>();
-            response ??= await gateway.Dispatch(model, options.Value.SsrUrl);
+            var response = context.Features.Get<SsrResponse?>();
             response ??= await ssrGateway.Dispatch(model, options.Value.SsrUrl);
 
-            if (response != null)
+            if (response.Value != default)
             {
                 context.Features.Set(response);
-                return response.GetBody();
+                return response.Value.GetBody();
             }
         }
 
-        var data = JsonSerializer.Serialize(model,
-            new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                ReferenceHandler = ReferenceHandler.IgnoreCycles
-            });
-
+        var data = options.Value.JsonSerializeFn(model);
         var encoded = WebUtility.HtmlEncode(data);
 
         return new HtmlString($"<div id=\"app\" data-page=\"{encoded}\"></div>");
@@ -95,19 +74,19 @@ internal class ResponseFactory(IHttpContextAccessor contextAccessor, SsrGateway 
     {
         var context = contextAccessor.HttpContext!;
 
-        var sharedData = context.Features.Get<InertiaSharedData>();
-        sharedData ??= new InertiaSharedData();
+        var sharedData = context.Features.Get<InertiaSharedProps>();
+        sharedData ??= new InertiaSharedProps();
         sharedData.Set(key, value);
 
         context.Features.Set(sharedData);
     }
 
-    public void Share(IDictionary<string, object?> data)
+    public void Share(InertiaProps data)
     {
         var context = contextAccessor.HttpContext!;
 
-        var sharedData = context.Features.Get<InertiaSharedData>();
-        sharedData ??= new InertiaSharedData();
+        var sharedData = context.Features.Get<InertiaSharedProps>();
+        sharedData ??= new InertiaSharedProps();
         sharedData.Merge(data);
 
         context.Features.Set(sharedData);

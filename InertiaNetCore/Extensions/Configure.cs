@@ -14,11 +14,12 @@ public static class Configure
 {
     public static InertiaApplicationBuilder UseInertia(this IApplicationBuilder app)
     {
-        var factory = app.ApplicationServices.GetRequiredService<IResponseFactory>();
+        var factory = app.ApplicationServices.GetRequiredService<ResponseFactory>();
         Inertia.UseFactory(factory);
 
         var viteBuilder = app.ApplicationServices.GetService<IViteBuilder>();
-        if (viteBuilder != null) Vite.UseBuilder(viteBuilder);
+        if (viteBuilder != null) 
+            Vite.UseBuilder(viteBuilder);
 
         app.Use(async (context, next) =>
         {
@@ -42,9 +43,8 @@ public static class Configure
         services.AddHttpContextAccessor();
         services.AddHttpClient();
 
-        services.AddSingleton<IResponseFactory, ResponseFactory>();
-        services.AddSingleton<IGateway, Gateway>();
         services.AddSingleton<SsrGateway>();
+        services.AddSingleton<ResponseFactory>();
 
         services.Configure<MvcOptions>(mvcOptions => { mvcOptions.Filters.Add<InertiaActionFilter>(); });
 
@@ -53,8 +53,7 @@ public static class Configure
         return services;
     }
 
-    public static IServiceCollection AddViteHelper(this IServiceCollection services,
-        Action<ViteOptions>? options = null)
+    public static IServiceCollection AddViteHelper(this IServiceCollection services, Action<ViteOptions>? options = null)
     {
         services.AddSingleton<IViteBuilder, ViteBuilder>();
         if (options != null) services.Configure(options);
