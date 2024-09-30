@@ -7,12 +7,8 @@ using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace InertiaNetCore.Utils;
 
-internal class InertiaActionFilter : IActionFilter
+internal class InertiaActionFilter(IUrlHelperFactory urlHelperFactory) : IActionFilter
 {
-    private readonly IUrlHelperFactory _urlHelperFactory;
-
-    public InertiaActionFilter(IUrlHelperFactory urlHelperFactory) => _urlHelperFactory = urlHelperFactory;
-
     public void OnActionExecuting(ActionExecutingContext context)
     {
         //
@@ -20,8 +16,9 @@ internal class InertiaActionFilter : IActionFilter
 
     public void OnActionExecuted(ActionExecutedContext context)
     {
-        if (!context.IsInertiaRequest()
-            || !new[] { "PUT", "PATCH", "DELETE" }.Contains(context.HttpContext.Request.Method)) return;
+        var methods = (ReadOnlySpan<string>)["PUT", "PATCH", "DELETE"];
+        if (!context.HttpContext.IsInertiaRequest() || !methods.Contains(context.HttpContext.Request.Method)) 
+            return;
 
         var destinationUrl = context.Result switch
         {
@@ -39,7 +36,7 @@ internal class InertiaActionFilter : IActionFilter
 
     private string? GetUrl(RedirectToActionResult result, ActionContext context)
     {
-        var urlHelper = result.UrlHelper ?? _urlHelperFactory.GetUrlHelper(context);
+        var urlHelper = result.UrlHelper ?? urlHelperFactory.GetUrlHelper(context);
 
         return urlHelper.Action(
             result.ActionName,
@@ -52,7 +49,7 @@ internal class InertiaActionFilter : IActionFilter
 
     private string? GetUrl(RedirectToPageResult result, ActionContext context)
     {
-        var urlHelper = result.UrlHelper ?? _urlHelperFactory.GetUrlHelper(context);
+        var urlHelper = result.UrlHelper ?? urlHelperFactory.GetUrlHelper(context);
 
         return urlHelper.Page(
             result.PageName,
@@ -65,7 +62,7 @@ internal class InertiaActionFilter : IActionFilter
 
     private string? GetUrl(RedirectToRouteResult result, ActionContext context)
     {
-        var urlHelper = result.UrlHelper ?? _urlHelperFactory.GetUrlHelper(context);
+        var urlHelper = result.UrlHelper ?? urlHelperFactory.GetUrlHelper(context);
 
         return urlHelper.RouteUrl(
             result.RouteName,

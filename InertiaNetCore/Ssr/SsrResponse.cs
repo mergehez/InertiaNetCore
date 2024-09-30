@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Html;
 
 namespace InertiaNetCore.Ssr;
 
-internal class SsrResponse
+internal readonly record struct SsrResponse()
 {
-    public List<string> Head { get; set; } = default!;
-    public string Body { get; set; } = default!;
+    public IEnumerable<string> Head { get; init; } = [];
+    public string Body { get; init; } = default!;
 
     public IHtmlContent GetBody() => new HtmlString(Body);
 

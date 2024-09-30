@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -26,23 +25,8 @@ internal static class InertiaExtensions
         return Uri.UnescapeDataString(context.Request.GetEncodedPathAndQuery());
     }
 
-    internal static string RequestedUri(this ActionContext context)
-    {
-        return context.HttpContext.RequestedUri();
-    }
-
     internal static bool IsInertiaRequest(this HttpContext context)
     {
         return bool.TryParse(context.Request.Headers["X-Inertia"], out _);
-    }
-
-    internal static bool IsInertiaRequest(this ActionContext context)
-    {
-        return context.HttpContext.IsInertiaRequest();
-    }
-
-    internal static string ToCamelCase(this string s)
-    {
-        return JsonNamingPolicy.CamelCase.ConvertName(s);
     }
 }
