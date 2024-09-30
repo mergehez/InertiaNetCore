@@ -12,7 +12,7 @@ namespace InertiaNetCore.Extensions;
 
 public static class Configure
 {
-    public static InertiaApplicationBuilder UseInertia(this IApplicationBuilder app)
+    public static IApplicationBuilder UseInertia(this IApplicationBuilder app)
     {
         var factory = app.ApplicationServices.GetRequiredService<ResponseFactory>();
         Inertia.UseFactory(factory);
@@ -34,7 +34,7 @@ public static class Configure
             await next();
         });
 
-        return new InertiaApplicationBuilder(app);
+        return app;
     }
 
     public static IServiceCollection AddInertia(this IServiceCollection services,
@@ -53,6 +53,35 @@ public static class Configure
         return services;
     }
 
+    
+    public static IApplicationBuilder AddInertiaSharedData(this IApplicationBuilder app, Func<HttpContext, Task<InertiaProps>> middleware)
+    {
+        app.Use(async (context, next) =>
+        {
+            var data = await middleware(context);
+            
+            Inertia.Share(data);
+            
+            await next();
+        });
+        
+        return app;
+    }
+    
+    public static IApplicationBuilder AddInertiaSharedData(this IApplicationBuilder app, Func<HttpContext, InertiaProps> middleware)
+    {
+        app.Use(async (context, next) =>
+        {
+            var data = middleware(context);
+            
+            Inertia.Share(data);
+            
+            await next();
+        });
+        
+        return app;
+    }
+    
     public static IServiceCollection AddViteHelper(this IServiceCollection services, Action<ViteOptions>? options = null)
     {
         services.AddSingleton<IViteBuilder, ViteBuilder>();
