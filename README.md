@@ -15,13 +15,13 @@ This library is a fork of [kapi2289/InertiaCore](https://github.com/kapi2289/Ine
 - [Getting started](#getting-started)
 - [Configuration](#configuration)
 - [Usage](#usage)
-    * [Frontend](#frontend)
-    * [Backend](#backend)
+  * [Frontend](#frontend)
+  * [Backend](#backend)
 - [Features](#features)
-    * [Shared data](#shared-data)
-    * [Server-side rendering](#server-side-rendering)
-    * [Vite helper](#vite-helper)
-        - [Examples](#examples-1)
+  * [Shared data](#shared-data)
+  * [Server-side rendering](#server-side-rendering)
+  * [Vite helper](#vite-helper)
+    - [Examples](#examples-1)
 
 ## Demo
 

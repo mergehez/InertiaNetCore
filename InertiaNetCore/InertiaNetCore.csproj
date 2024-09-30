@@ -2,18 +2,18 @@
     <PropertyGroup>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.0.1</Version>
+        <Version>1.0.0</Version>
         <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
         <LangVersion>preview</LangVersion>
         <PackageId>InertiaNetCore</PackageId>
         <Authors>mergehez</Authors>
-        <Description>Inertia.js ASP.NET Core Adapter. https://inertiajs.com/</Description>
+        <Description>Inertia.js ASP.NET Core Adapter</Description>
         <PackageProjectUrl>https://github.com/mergehez/InertiaNetCore</PackageProjectUrl>
         <RepositoryUrl>https://github.com/mergehez/InertiaNetCore</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-<!--        <PackageLicenseFile>../LICENSE</PackageLicenseFile>-->
-<!--        <PackageReadmeFile>README.md</PackageReadmeFile>-->
-        <PackageTags>Inertia,Inertiajs,ASPNET Core,Vue</PackageTags>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>Inertia,Inertia.js,Asp.Net Core,Vue,Frontend</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
