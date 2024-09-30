@@ -111,4 +111,5 @@ internal class ResponseFactory(IHttpContextAccessor contextAccessor, IGateway ga
     }
 
     public LazyProp Lazy(Func<object?> callback) => new(callback);
+    public AlwaysProp Always(Func<object?> callback) => new(callback);
 }
