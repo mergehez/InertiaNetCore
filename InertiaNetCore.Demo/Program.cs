@@ -1,14 +1,18 @@
 using InertiaNetCore.Extensions;
+using InertiaNetCore.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddInertia(options =>
 {
-    // options.JsonResultResolver = (page) => EtResults.Ok(page).AsInertiaResult()!.ExecuteResultAsync(context);
-}).AddViteHelper();
+    // options.JsonResultResolver = (page) => CustomResults.Ok(page);
+});
+builder.Services.AddViteHelper();
+
+
+
 
 var app = builder.Build();
 
@@ -22,12 +26,12 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseInertia()
-    .AddSharedData(_ => new Dictionary<string, object?>
+    .AddSharedData(_ => new InertiaProps
     {
-        ["auth"] = new
+        ["Auth"] = new InertiaProps
         {
-            Token = "123456789",
-            Username = "Mergehez",
+            ["Token"] = "123456789",
+            ["Username"] = "Mergehez",
         }
     });
 

@@ -1,4 +1,4 @@
-@using System.Text.Json
+@using InertiaNetCore
 @using InertiaNetCore.Utils
 
 <!DOCTYPE html>
@@ -7,11 +7,13 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title inertia>InertiaNetCore Vue Demo</title>
+    
+    @await Inertia.Head(Model)
 </head>
-<body class="dx-viewport">
 
-<div id="app" data-page="@JsonSerializer.Serialize(Model, new JsonSerializerOptions(JsonSerializerDefaults.Web))">
-</div>
+<body>
+
+@await Inertia.Html(Model)
 
 @Vite.Input("src/app.ts")
 

@@ -1,3 +1,4 @@
+using InertiaNetCore.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InertiaNetCore.Demo.Controllers;
@@ -7,9 +8,9 @@ public class UsersController : Controller
 {
     public IActionResult Index()
     {
-        return Inertia.Render("pages/PageUsers", new
+        return Inertia.Render("pages/PageUsers", new InertiaProps
         {
-            Users = (string[]) ["First User", "Second User"],
+            ["Users"] = (string[]) ["First User", "Second User"],
         });
     }
 }
