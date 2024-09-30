@@ -19,7 +19,7 @@ public static class Inertia
 
     public static Task<IHtmlContent> Html(dynamic model) => _factory.Html(model);
 
-    public static void Version(object? version) => _factory.Version(version);
+    public static void SetVersion(object? version) => _factory.SetVersion(version);
 
     public static string? GetVersion() => _factory.GetVersion();
 

@@ -59,7 +59,7 @@ internal class ResponseFactory(IHttpContextAccessor contextAccessor, SsrGateway 
         return new HtmlString($"<div id=\"app\" data-page=\"{encoded}\"></div>");
     }
 
-    public void Version(object? version) => _version = version;
+    public void SetVersion(object? version) => _version = version;
 
     public string? GetVersion() => _version switch
     {
