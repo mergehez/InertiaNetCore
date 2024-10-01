@@ -30,8 +30,4 @@
         <Message Importance="high" Text="Restoring dependencies using 'bun'. This may take several minutes..." />
         <Exec WorkingDirectory="$(SpaRoot)" Command="bun install" />
     </Target>
-    
-    <ItemGroup>
-      <Folder Include="wwwroot\build\" />
-    </ItemGroup>
 </Project>
