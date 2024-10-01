@@ -1,0 +1,1 @@
+import{d as o,Q as r,a,b as s,e as n,t as l,u as p,F as u,o as m}from"./app-C0rsK5JE.js";/* empty css            */const b=o({__name:"PageUsers",setup(i){const t=r();return(d,e)=>(m(),a(u,null,[e[1]||(e[1]=s("h1",{class:"font-bold text-2xl mb-4"},"Users",-1)),s("p",null,[e[0]||(e[0]=s("b",null,"Users:",-1)),n(" "+l(p(t).props.users.join(", ")),1)])],64))}});export{b as default};
