@@ -25,7 +25,7 @@ function reloadRouter(opts?: any) {
         <pre class="text-xs bg-gray-100 dark:bg-gray-900 p-3 mb-10 rounded-md">
 public IActionResult Index()
 {
-    var now = DateTime.UtcNow;
+    var now = DateTime.UtcNow.ToString("O").Split('T')[1].Replace(".", " ");
     return Inertia.Render("pages/PageIndex", new InertiaProps
     {
         ["NowDirect"] = now,
