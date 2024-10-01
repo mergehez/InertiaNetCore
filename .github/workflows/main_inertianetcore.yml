@@ -25,10 +25,10 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: dir
-        run: dir
+        run: dir ${{env.DOTNET_ROOT}}
         
       - name: dotnet publish
-        run: cd InertiaNetCore.Demo && dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/InertiaNetCore
+        run: cd InertiaNetCore.Demo && dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/InertiaNetCore --framework=net8.0
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
