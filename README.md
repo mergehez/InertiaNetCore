@@ -4,11 +4,15 @@
 [![NuGet](https://img.shields.io/nuget/dt/InertiaNetCore?style=flat-square)](https://www.nuget.org/packages/InertiaNetCore)
 [![License](https://img.shields.io/github/license/mergehez/InertiaNetCore?style=flat-square)](https://github.com/mergehez/InertiaNetCore/blob/main/LICENSE)
 
-## Attribution
+## About
 
-This library is a fork of [kapi2289/InertiaCore](https://github.com/kapi2289/InertiaCore).
+This library is a fork of [kapi2289/InertiaCore](https://github.com/kapi2289/InertiaCore). (Last commit: Aug 18, 2023)
 
 Some errors were fixed, and unnecessary dependencies were removed. The library will be maintained and updated whenever necessary.
+
+It is compatible with .NET 7 and .NET 8. As soon as .NET 9 is released, the library will be updated to support it.
+
+Feel free to contribute to the project by creating issues or pull requests.
 
 ## Table of contents
 
