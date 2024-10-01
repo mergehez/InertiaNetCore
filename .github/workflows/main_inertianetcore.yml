@@ -21,12 +21,6 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      - name: cd to Demo
-        run: cd InertiaNetCore.Demo
-
-      - name: dir
-        run: dir ${{github.workspace}}
-        
       - name: Build with dotnet
         run: dotnet build --configuration Release
         
