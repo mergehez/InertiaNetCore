@@ -31,7 +31,9 @@ Feel free to contribute to the project by creating issues or pull requests.
 
 ## Demo
 
-As of now, there is no online demo available. If you want to see how it works, you can clone this repository and run [InertiaNetCore.Demo](InertiaNetCore.Demo). It contains a simple Vue.js frontend and an ASP.NET Core backend.
+Demo is available at https://inertianetcore-d5c7hcggg7afdqg0.germanywestcentral-01.azurewebsites.net/
+
+If you want to see how it exactly works, you can clone this repository and play with [InertiaNetCore.Demo](InertiaNetCore.Demo). It contains a simple Vue.js frontend and an ASP.NET Core backend.
 
 ## Installation
 
