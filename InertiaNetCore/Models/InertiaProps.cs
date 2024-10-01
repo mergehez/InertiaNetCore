@@ -1,4 +1,5 @@
 using InertiaNetCore.Utils;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace InertiaNetCore.Models;
 
@@ -32,7 +33,12 @@ public class InertiaProps : Dictionary<string, object?>
         return props;
     }
     
-    public InertiaProps Merge(InertiaProps? with)
+    internal static InertiaProps Create(Dictionary<string, object?>? initial)
+    {
+        return new InertiaProps().Merge(initial);
+    }
+
+    internal InertiaProps Merge(Dictionary<string, object?>? with)
     {
         if (with is null) 
             return this;
@@ -45,12 +51,12 @@ public class InertiaProps : Dictionary<string, object?>
         return this;
     }
     
-    public InertiaProps AddErrors(IDictionary<string,string> errors)
+    internal InertiaProps AddErrors(IDictionary<string,string> errors)
     {
         this["errors"] = errors;
         return this;
     }
-    public InertiaProps AddTimeStamp()
+    internal InertiaProps AddTimeStamp()
     {
         this["timestamp"] = DateTime.UtcNow;
         return this;

@@ -14,6 +14,8 @@ public static class Inertia
     internal static void UseFactory(ResponseFactory factory) => _factory = factory;
 
     public static Response Render(string component, InertiaProps? props = default) => _factory.Render(component, props);
+    
+    public static Response Render(string component, Dictionary<string, object?>? props = default) => _factory.Render(component, InertiaProps.Create(props));
 
     public static Task<IHtmlContent> Head(dynamic model) => _factory.Head(model);
 
