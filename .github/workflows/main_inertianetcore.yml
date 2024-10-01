@@ -21,20 +21,23 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
+      - name: cd to Demo
+        run: cd InertiaNetCore.Demo
 
       - name: dir
-        run: dir ${{env.DOTNET_ROOT}}
+        run: dir ${{github.workspace}}
+        
+      - name: Build with dotnet
+        run: dotnet build --configuration Release
         
       - name: dotnet publish
-        run: cd InertiaNetCore.Demo && dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/InertiaNetCore --framework=net8.0
+        run: dotnet publish -c Release -o ${{github.workspace}}/publish --framework=net8.0
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/InertiaNetCore
+          path: ${{github.workspace}}/publish
 
   deploy:
     runs-on: windows-latest
