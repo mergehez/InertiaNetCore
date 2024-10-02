@@ -1,37 +1,38 @@
 {
-  "_PageIndex.vue_vue_type_script_setup_true_lang-CmCWmr1a.js": {
-    "file": "assets/PageIndex.vue_vue_type_script_setup_true_lang-CmCWmr1a.js",
+  "_PageIndex.vue_vue_type_script_setup_true_lang-6RXmZLOK.js": {
+    "file": "assets/PageIndex.vue_vue_type_script_setup_true_lang-6RXmZLOK.js",
     "name": "PageIndex.vue_vue_type_script_setup_true_lang",
     "imports": [
       "src/app.ts"
     ]
   },
   "src/App.vue": {
-    "file": "assets/App-mcc8_Vdb.js",
+    "file": "assets/App-C9IzvyJI.js",
     "name": "App",
     "src": "src/App.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_PageIndex.vue_vue_type_script_setup_true_lang-CmCWmr1a.js",
+      "_PageIndex.vue_vue_type_script_setup_true_lang-6RXmZLOK.js",
       "src/app.ts"
     ],
     "css": [
-      "assets/app-CgX2CeCC.css"
+      "assets/app-CRBW4zOI.css"
     ]
   },
   "src/app.scss": {
-    "file": "assets/app-CgX2CeCC.css",
+    "file": "assets/app-CRBW4zOI.css",
     "src": "src/app.scss",
     "isEntry": true
   },
   "src/app.ts": {
-    "file": "assets/app-C0rsK5JE.js",
+    "file": "assets/app-CLOpvECd.js",
     "name": "app",
     "src": "src/app.ts",
     "isEntry": true,
     "dynamicImports": [
       "src/App.vue",
       "src/components/HelloWorld.vue",
+      "src/components/Spinner.vue",
       "src/components/ThemeSwitcher.vue",
       "src/layout/AppLayout.vue",
       "src/pages/PageAbout.vue",
@@ -39,11 +40,11 @@
       "src/pages/PageUsers.vue"
     ],
     "css": [
-      "assets/app-CgX2CeCC.css"
+      "assets/app-CRBW4zOI.css"
     ]
   },
   "src/components/HelloWorld.vue": {
-    "file": "assets/HelloWorld-BiQ0DtM_.js",
+    "file": "assets/HelloWorld-DTOnV_Oy.js",
     "name": "HelloWorld",
     "src": "src/components/HelloWorld.vue",
     "isDynamicEntry": true,
@@ -52,11 +53,23 @@
     ],
     "css": [
       "assets/HelloWorld-DOxUjkyI.css",
-      "assets/app-CgX2CeCC.css"
+      "assets/app-CRBW4zOI.css"
+    ]
+  },
+  "src/components/Spinner.vue": {
+    "file": "assets/Spinner-Bl9V9d25.js",
+    "name": "Spinner",
+    "src": "src/components/Spinner.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/app.ts"
+    ],
+    "css": [
+      "assets/app-CRBW4zOI.css"
     ]
   },
   "src/components/ThemeSwitcher.vue": {
-    "file": "assets/ThemeSwitcher-CDimg_UN.js",
+    "file": "assets/ThemeSwitcher-Ctj10ihj.js",
     "name": "ThemeSwitcher",
     "src": "src/components/ThemeSwitcher.vue",
     "isDynamicEntry": true,
@@ -64,11 +77,11 @@
       "src/app.ts"
     ],
     "css": [
-      "assets/app-CgX2CeCC.css"
+      "assets/app-CRBW4zOI.css"
     ]
   },
   "src/layout/AppLayout.vue": {
-    "file": "assets/AppLayout-t7aKpkRZ.js",
+    "file": "assets/AppLayout-B8kfYQyH.js",
     "name": "AppLayout",
     "src": "src/layout/AppLayout.vue",
     "isDynamicEntry": true,
@@ -76,11 +89,11 @@
       "src/app.ts"
     ],
     "css": [
-      "assets/app-CgX2CeCC.css"
+      "assets/app-CRBW4zOI.css"
     ]
   },
   "src/pages/PageAbout.vue": {
-    "file": "assets/PageAbout-Cq5VSW4W.js",
+    "file": "assets/PageAbout-DgSQ_meo.js",
     "name": "PageAbout",
     "src": "src/pages/PageAbout.vue",
     "isDynamicEntry": true,
@@ -88,24 +101,24 @@
       "src/app.ts"
     ],
     "css": [
-      "assets/app-CgX2CeCC.css"
+      "assets/app-CRBW4zOI.css"
     ]
   },
   "src/pages/PageIndex.vue": {
-    "file": "assets/PageIndex-Bj5T4pgE.js",
+    "file": "assets/PageIndex-Box-2eXI.js",
     "name": "PageIndex",
     "src": "src/pages/PageIndex.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_PageIndex.vue_vue_type_script_setup_true_lang-CmCWmr1a.js",
+      "_PageIndex.vue_vue_type_script_setup_true_lang-6RXmZLOK.js",
       "src/app.ts"
     ],
     "css": [
-      "assets/app-CgX2CeCC.css"
+      "assets/app-CRBW4zOI.css"
     ]
   },
   "src/pages/PageUsers.vue": {
-    "file": "assets/PageUsers-DLSAt6ab.js",
+    "file": "assets/PageUsers-CzUAxFqF.js",
     "name": "PageUsers",
     "src": "src/pages/PageUsers.vue",
     "isDynamicEntry": true,
@@ -113,7 +126,7 @@
       "src/app.ts"
     ],
     "css": [
-      "assets/app-CgX2CeCC.css"
+      "assets/app-CRBW4zOI.css"
     ]
   }
 }
