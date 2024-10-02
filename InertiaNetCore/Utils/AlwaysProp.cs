@@ -1,11 +1,19 @@
 namespace InertiaNetCore.Utils;
 
+internal interface IAlwaysProp;
+
 /// <summary>
 /// ALWAYS included on standard visits <br/>
 /// ALWAYS included on partial reloads <br/>
 /// ALWAYS evaluated when needed
 /// </summary>
-public class AlwaysProp(Func<object?> callback)
+public class AlwaysProp<T> : InvokableProp<T>, IAlwaysProp
 {
-    public object? Invoke() => callback.Invoke();
+    public AlwaysProp(Func<T?> callback) : base(callback)
+    {
+    }
+
+    public AlwaysProp(Func<Task<T?>> callbackAsync) : base(callbackAsync)
+    {
+    }
 }

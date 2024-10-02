@@ -20,7 +20,7 @@ public class Response(string component, InertiaProps props, string rootView, str
             Component = component,
             Version = version,
             Url = context.HttpContext.RequestedUri(),
-            Props = GetFinalProps(context),
+            Props = await GetFinalProps(context),
         };
         
         if (!context.HttpContext.IsInertiaRequest())
@@ -49,14 +49,15 @@ public class Response(string component, InertiaProps props, string rootView, str
         }
     }
     
-    private InertiaProps GetFinalProps(ActionContext context)
+    private async Task<InertiaProps> GetFinalProps(ActionContext context)
     {
         var partials = context.IsInertiaPartialComponent(component) ? context.GetPartialData() : null;
         var shared = context.HttpContext.Features.Get<InertiaSharedProps>();
         var errors = GetErrors(context);
+
+        var finalProps = await props.ToProcessedProps(partials);
         
-        return props
-            .ToProcessedProps(partials)
+        return finalProps
             .Merge(shared?.GetData())
             .AddTimeStamp()
             .AddErrors(errors);

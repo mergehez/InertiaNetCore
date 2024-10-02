@@ -1,11 +1,10 @@
 using InertiaNetCore.Utils;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace InertiaNetCore.Models;
 
 public class InertiaProps : Dictionary<string, object?>
 {
-    internal InertiaProps ToProcessedProps(List<string>? partials)
+    internal async Task<InertiaProps> ToProcessedProps(List<string>? partials)
     {
         var props = new InertiaProps();
         
@@ -14,18 +13,18 @@ public class InertiaProps : Dictionary<string, object?>
 
         foreach (var (key, value) in this)
         {
-            if(partials is null && value is LazyProp)
+            if(partials is null && value is ILazyProp)
                 continue;
             
-            if(partials is not null && value is not AlwaysProp && !partials.Contains(key, StringComparer.InvariantCultureIgnoreCase))
+            if(partials is not null && value is not IAlwaysProp && !partials.Contains(key, StringComparer.InvariantCultureIgnoreCase))
                 continue;
             
             props.Add(key, value switch
             {
+                Func<Task<object?>> f => await f.Invoke(),
                 Func<object?> f => f.Invoke(),
                 Delegate d => d.DynamicInvoke(),
-                LazyProp l => l.Invoke(),
-                AlwaysProp l => l.Invoke(),
+                IInvokableProp l => await l.InvokeToObject(),
                 _ => value
             });
         }

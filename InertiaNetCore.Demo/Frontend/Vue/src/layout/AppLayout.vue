@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link, router, usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import ThemeSwitcher from '@/components/ThemeSwitcher.vue';
+import Spinner from '@/components/Spinner.vue';
+import { globalState, initGlobalListeners } from '@/utils/globalState';
 
 const showMenu = ref(true);
 const showInertiaProps = ref(true);
+
+initGlobalListeners();
 
 const page = usePage<{
     auth: {
@@ -23,6 +27,8 @@ const page = usePage<{
                 </svg>
             </button>
             <Link class="rounded transition-colors duration-300" href="/">InertiaNetCore</Link>
+
+            <Spinner :visible="globalState.routerWaiting"/>
 
             <i class="flex-1"></i>
             <ThemeSwitcher />

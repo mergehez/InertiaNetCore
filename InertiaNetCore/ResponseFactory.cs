@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 namespace InertiaNetCore;
 
 [SuppressMessage("Performance", "CA1822:Mark members as static")]
+[SuppressMessage("ReSharper", "MemberCanBeMadeStatic.Global")]
 internal class ResponseFactory(IHttpContextAccessor contextAccessor, SsrGateway ssrGateway, IOptions<InertiaOptions> options)
 {
     private object? _version;
@@ -92,6 +93,8 @@ internal class ResponseFactory(IHttpContextAccessor contextAccessor, SsrGateway 
         context.Features.Set(sharedData);
     }
 
-    public LazyProp Lazy(Func<object?> callback) => new(callback);
-    public AlwaysProp Always(Func<object?> callback) => new(callback);
+    public LazyProp<T> Lazy<T>(Func<T?> callback) => new(callback);
+    public LazyProp<T> Lazy<T>(Func<Task<T?>> callback) => new(callback);
+    public AlwaysProp<T> Always<T>(Func<T?> callback) => new(callback);
+    public AlwaysProp<T> Always<T>(Func<Task<T?>> callback) => new(callback);
 }

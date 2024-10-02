@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "prettier": "^3.3.3",
+    "tailwind-merge": "^2.5.2",
     "vue": "^3.4.37"
   },
   "devDependencies": {

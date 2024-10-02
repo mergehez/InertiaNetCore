@@ -31,6 +31,9 @@ public static class Inertia
 
     public static void Share(InertiaProps data) => _factory.Share(data);
 
-    public static LazyProp Lazy(Func<object?> callback) => _factory.Lazy(callback);
-    public static AlwaysProp Always(Func<object?> callback) => _factory.Always(callback);
+    public static LazyProp<T> Lazy<T>(Func<T?> callback) => _factory.Lazy(callback);
+    public static LazyProp<T> Lazy<T>(Func<Task<T?>> callback) => _factory.Lazy(callback);
+    
+    public static AlwaysProp<T> Always<T>(Func<T?> callback) => _factory.Always(callback);
+    public static AlwaysProp<T> Always<T>(Func<Task<T?>> callback) => _factory.Always(callback);
 }
