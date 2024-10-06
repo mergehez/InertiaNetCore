@@ -23,6 +23,7 @@ Feel free to contribute to the project by creating issues or pull requests.
   * [Backend](#backend)
 - [Features](#features)
   * [Shared data](#shared-data)
+  * [Flash Messages](#flash-messages)
   * [Server-side rendering](#server-side-rendering)
   * [Vite helper](#vite-helper)
     - [Examples](#examples-1)
@@ -180,6 +181,26 @@ app.AddInertiaSharedData(httpContext => new InertiaProps
     }
 });
 ```
+
+### Flash Messages
+
+You can add flash messages to your responses using the `Inertia.Back(url).WithFlash(...)` method.
+    
+```csharp
+[HttpDelete("{id:int}")]
+public async Task<IActionResult> Destroy(int id)
+{
+    /// find user
+
+    if (!user.IsAdmin)
+        return Inertia.Back().WithFlash("error", "Admins cannot be deleted.");
+    
+    // delete user
+    
+    return Inertia.Back().WithFlash("success", "User deleted.");
+}
+```
+
 
 ### Server-side rendering
 
