@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using InertiaNetCore.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,8 @@ public class InertiaBackResult : IActionResult
     /// <inheritdoc />
     public Task ExecuteResultAsync(ActionContext context)
     {
+        SaveErrors(context);
+        
         context.HttpContext.Response.Clear();
         context.HttpContext.Response.Headers.Append("X-Inertia-Location", _url);
         context.HttpContext.Response.Redirect(_url);
@@ -35,6 +38,18 @@ public class InertiaBackResult : IActionResult
         return Task.CompletedTask;
     }
     
+    private void SaveErrors(ActionContext context)
+    {
+        if (context.ModelState.IsValid)
+            return;
+        
+        var errors =  context.ModelState.ToDictionary(
+            kv => kv.Key,
+            kv => kv.Value?.Errors.FirstOrDefault()?.ErrorMessage ?? ""
+        );
+        
+        _httpContext.Session.SetString("errors", JsonSerializer.Serialize(errors));
+    }
     
     public InertiaBackResult WithFlash(string key, string? value)
     {

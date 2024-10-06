@@ -1,3 +1,4 @@
+using System.Text.Json;
 using InertiaNetCore.Extensions;
 using InertiaNetCore.Models;
 using Microsoft.AspNetCore.Http;
@@ -71,6 +72,16 @@ public class Response(string component, InertiaProps props, string rootView, str
     
     private static Dictionary<string, string> GetErrors(ActionContext context)
     {
+        var sessionErrors = context.HttpContext.Session.GetString("errors");
+        if (sessionErrors is not null)
+        {
+            var errors = JsonSerializer.Deserialize<Dictionary<string, string>>(sessionErrors);
+            context.HttpContext.Session.Remove("errors");
+            
+            if(errors is not null)
+                return errors;
+        }
+        
         if (context.ModelState.IsValid) 
             return [];
         
