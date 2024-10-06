@@ -184,19 +184,20 @@ app.AddInertiaSharedData(httpContext => new InertiaProps
 
 ### Flash Messages
 
-You can add flash messages to your responses using the `Inertia.Back(url).WithFlash(...)` method.
+You can add flash messages to your responses using the `Inertia.Flash(...)` or `Inertia.Back(url).WithFlash(...)` methods.
     
 ```csharp
 [HttpDelete("{id:int}")]
 public async Task<IActionResult> Destroy(int id)
 {
-    /// find user
-
-    if (!user.IsAdmin)
-        return Inertia.Back().WithFlash("error", "Admins cannot be deleted.");
+    // find user
     
     // delete user
     
+    Inertia.Flash("success", "User deleted."); // set it anywhere in the app
+    return Redirect("/users");
+    
+    // or one-liner in case you use Inertia.Back()
     return Inertia.Back().WithFlash("success", "User deleted.");
 }
 ```
