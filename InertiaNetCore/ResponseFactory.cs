@@ -69,7 +69,15 @@ internal class ResponseFactory(IHttpContextAccessor contextAccessor, SsrGateway 
         _ => null,
     };
 
-    public LocationResult Location(string url) => new(url);
+    public LocationResult Location(string url)
+    {
+        return new LocationResult(url);
+    }
+
+    public InertiaBackResult Back()
+    {
+        return new InertiaBackResult(contextAccessor.HttpContext!);
+    }
 
     public void Share(string key, object? value)
     {
