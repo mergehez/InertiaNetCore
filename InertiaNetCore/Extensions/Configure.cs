@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace InertiaNetCore.Extensions;
 
@@ -35,11 +34,7 @@ public static class Configure
             await next();
         });
         
-        var options = app.ApplicationServices.GetRequiredService<IOptions<InertiaOptions>>().Value;
-        if (options.SessionEnabled)
-        {
-            app.UseSession();
-        }
+        app.UseSession();
 
         return app;
     }
