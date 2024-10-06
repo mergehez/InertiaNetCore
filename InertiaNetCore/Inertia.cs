@@ -33,6 +33,8 @@ public static class Inertia
     public static void Share(string key, object? value) => _factory.Share(key, value);
 
     public static void Share(InertiaProps data) => _factory.Share(data);
+    
+    public static void Flash(string key, string? value) => _factory.Flash(key, value);
 
     public static LazyProp<T> Lazy<T>(Func<T?> callback) => _factory.Lazy(callback);
     public static LazyProp<T> Lazy<T>(Func<Task<T?>> callback) => _factory.Lazy(callback);

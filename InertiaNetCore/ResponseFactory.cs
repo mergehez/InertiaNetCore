@@ -101,6 +101,16 @@ internal class ResponseFactory(IHttpContextAccessor contextAccessor, SsrGateway 
         context.Features.Set(sharedData);
     }
 
+    public void Flash(string key, string? value)
+    {
+        var context = contextAccessor.HttpContext!;
+
+        var flash = context.Features.Get<InertiaFlashMessages>() ?? InertiaFlashMessages.FromSession(context);
+        flash.Set(key, value);
+
+        context.Features.Set(flash);
+    }
+    
     public LazyProp<T> Lazy<T>(Func<T?> callback) => new(callback);
     public LazyProp<T> Lazy<T>(Func<Task<T?>> callback) => new(callback);
     public AlwaysProp<T> Always<T>(Func<T?> callback) => new(callback);
