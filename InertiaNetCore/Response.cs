@@ -1,6 +1,5 @@
 using InertiaNetCore.Extensions;
 using InertiaNetCore.Models;
-using InertiaNetCore.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -53,14 +52,21 @@ public class Response(string component, InertiaProps props, string rootView, str
     {
         var partials = context.IsInertiaPartialComponent(component) ? context.GetPartialData() : null;
         var shared = context.HttpContext.Features.Get<InertiaSharedProps>();
+        var flash = context.HttpContext.Features.Get<InertiaFlashMessages>() 
+                    ?? InertiaFlashMessages.FromSession(context.HttpContext);
         var errors = GetErrors(context);
-
+        
         var finalProps = await props.ToProcessedProps(partials);
         
-        return finalProps
+        finalProps = finalProps
             .Merge(shared?.GetData())
             .AddTimeStamp()
+            .AddFlash(flash.GetData())
             .AddErrors(errors);
+        
+        flash.Clear(false);
+        
+        return finalProps;
     }
     
     private static Dictionary<string, string> GetErrors(ActionContext context)
@@ -72,7 +78,6 @@ public class Response(string component, InertiaProps props, string rootView, str
             kv => kv.Key,
             kv => kv.Value?.Errors.FirstOrDefault()?.ErrorMessage ?? ""
             );
-
     }
 
     public Response WithViewData(IDictionary<string, object> viewData)

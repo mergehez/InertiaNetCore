@@ -55,6 +55,11 @@ public class InertiaProps : Dictionary<string, object?>
         this["errors"] = errors;
         return this;
     }
+    internal InertiaProps AddFlash(InertiaProps? flash)
+    {
+        this["flash"] = flash;
+        return this;
+    }
     internal InertiaProps AddTimeStamp()
     {
         this["timestamp"] = DateTime.UtcNow;

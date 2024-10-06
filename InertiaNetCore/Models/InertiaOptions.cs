@@ -9,6 +9,8 @@ public class InertiaOptions
 
     public bool SsrEnabled { get; set; } = false;
     public string SsrUrl { get; set; } = "http://127.0.0.1:13714/render";
+    
+    public bool SessionEnabled { get; set; } = false;
 
     private static JsonSerializerOptions DefaultJsonSerializerOptions { get; } = new()
     {
