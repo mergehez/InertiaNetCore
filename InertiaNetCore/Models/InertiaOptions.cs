@@ -19,5 +19,8 @@ public class InertiaOptions
 
     public object JsonSerializerOptions { get; set; } = DefaultJsonSerializerOptions;
     
-    public Func<object, string> JsonSerializeFn { get; set; } = model => JsonSerializer.Serialize(model, DefaultJsonSerializerOptions);
+    public Func<object, InertiaOptions, string> JsonSerializeFn { get; set; } = (model, o) =>
+    {
+        return JsonSerializer.Serialize(model, o.JsonSerializerOptions as JsonSerializerOptions);
+    };
 }

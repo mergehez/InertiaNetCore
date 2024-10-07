@@ -54,7 +54,7 @@ internal class ResponseFactory(IHttpContextAccessor contextAccessor, SsrGateway 
             }
         }
 
-        var data = options.Value.JsonSerializeFn(model);
+        var data = options.Value.JsonSerializeFn(model, options.Value);
         var encoded = WebUtility.HtmlEncode(data);
 
         return new HtmlString($"<div id=\"app\" data-page=\"{encoded}\"></div>");
