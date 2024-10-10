@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace InertiaNetCore.Extensions;
 
@@ -40,7 +41,7 @@ public static class Configure
     }
 
     public static IServiceCollection AddInertia(this IServiceCollection services,
-        Action<InertiaOptions>? options = null, bool flashEnabled = true)
+        Action<InertiaOptions>? options = null)
     {
         services.AddHttpContextAccessor();
         services.AddHttpClient();
@@ -48,13 +49,16 @@ public static class Configure
         services.AddSingleton<SsrGateway>();
         services.AddSingleton<ResponseFactory>();
 
-        if (flashEnabled)
-            services.AddSession();
 
         services.Configure<MvcOptions>(mvcOptions => { mvcOptions.Filters.Add<InertiaActionFilter>(); });
 
-        if (options != null) 
+        if (options != null)
+        {
             services.Configure(options);
+        }
+
+        var opts = services.BuildServiceProvider().GetRequiredService<IOptions<InertiaOptions>>().Value;
+        services.AddSession(opts.ConfigureSession);
 
         return services;
     }
