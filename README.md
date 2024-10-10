@@ -1,8 +1,8 @@
 # Inertia.js ASP.NET Core Adapter
 
 [![NuGet](https://img.shields.io/nuget/v/InertiaNetCore?style=flat-square&color=blue)](https://www.nuget.org/packages/InertiaNetCore)
-[![NuGet](https://img.shields.io/nuget/dt/InertiaNetCore?style=flat-square)](https://www.nuget.org/packages/InertiaNetCore)
-[![License](https://img.shields.io/github/license/mergehez/InertiaNetCore?style=flat-square)](https://github.com/mergehez/InertiaNetCore/blob/main/LICENSE)
+[![NuGet](https://img.shields.io/nuget/dt/InertiaNetCore?style=flat-square&color=blue)](https://www.nuget.org/packages/InertiaNetCore)
+[![License](https://img.shields.io/github/license/mergehez/InertiaNetCore?style=flat-square&color=blue)](https://github.com/mergehez/InertiaNetCore/blob/main/LICENSE)
 
 This library is a fork of [kapi2289/InertiaCore](https://github.com/kapi2289/InertiaCore). (Last commit: Aug 18, 2023)
 
