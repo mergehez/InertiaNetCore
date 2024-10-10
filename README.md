@@ -24,6 +24,9 @@ Feel free to contribute to the project by creating issues or pull requests.
 - [Features](#features)
   * [Shared data](#shared-data)
   * [Flash Messages](#flash-messages)
+  * [Deferred props](#deferred-props)
+  * [Merging props](#merging-props)
+  * [History encryption](#history-encryption)
   * [Server-side rendering](#server-side-rendering)
   * [Vite helper](#vite-helper)
     - [Examples](#examples-1)
@@ -203,6 +206,83 @@ public async Task<IActionResult> Destroy(int id)
 }
 ```
 
+### Deferred props
+
+Deferred props allow you to defer the loading of certain page data until after the initial page render. (see [Inertia.js docs](https://v2.inertiajs.com/deferred-props))
+
+In the example below, the `Posts` prop will be loaded after the initial page render.
+
+```csharp
+public IActionResult Profile()
+{
+    return Inertia.Render("pages/Profile", new InertiaProps
+    {
+        ["Foo"] = "Bar", 
+        ["Posts"] = Inertia.Defer(async () =>
+        {
+            return await _context.Posts.ToListAsync();
+        })
+    });
+}
+```
+
+> [!NOTE]
+> Deferred props are supported starting from Inertia.js v2.0
+
+
+### Merging props
+
+By default, Inertia overwrites props with the same name when reloading a page. However, there are instances, such as pagination or infinite scrolling, where that is not the desired behavior. In these cases, you can merge props instead of overwriting them. (see [Inertia.js docs](https://v2.inertiajs.com/merging-props))
+
+```csharp
+public IActionResult Users(int page, int perPage)
+{
+    return Inertia.Render("pages/Users", new InertiaProps
+    {
+        ["Results"] = Inertia.Merge(async () =>
+        {
+            return await GetPaginatedUsers(page, perPage);
+        })
+    });
+}
+```
+
+> [!NOTE]
+> Merging props are supported starting from Inertia.js v2.0
+
+### History encryption
+
+See [Inertia.js docs](https://v2.inertiajs.com/history-encryption) for more information.
+
+History encryption is an opt-in feature. There are several methods for enabling it:
+
+#### Global encryption:
+
+If you'd like to enable history encryption globally, set the `EncryptHistory` option to `true` in `AddInertia` method in `Program.cs`.
+
+```csharp
+builder.Services.AddInertia(options =>
+{
+    options.EncryptHistory = true;
+});
+```
+
+#### Per-request encryption:
+   To encrypt the history of an individual request, simply call the `Inertia.EncryptHistory()` method before returning the response.
+
+```csharp
+Inertia.EncryptHistory();
+```
+
+#### Clearing encrypted history:
+To clear the history state, you can call the `Inertia.ClearHistory()` method before returning the response.
+
+```csharp
+Inertia.ClearHistory();
+```
+
+> [!NOTE]
+> History encryption is supported starting from Inertia.js v2.0
 
 ### Server-side rendering
 
@@ -329,10 +409,3 @@ export default defineConfig({
     },
 });
 ```
-
-
-## Work in progress
-
-- [x] Deferred props
-- [x] Merging props
-- [ ] History encryption
