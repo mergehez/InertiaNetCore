@@ -335,3 +335,4 @@ export default defineConfig({
 
 - [ ] Deferred props
 - [ ] Merging props
+- [ ] History encryption
