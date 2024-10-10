@@ -38,6 +38,9 @@ public static class Inertia
 
     public static LazyProp<T> Lazy<T>(Func<T?> callback) => _factory.Lazy(callback);
     public static LazyProp<T> Lazy<T>(Func<Task<T?>> callback) => _factory.Lazy(callback);
+
+    public static DeferredProp<T> Defer<T>(Func<T?> callback, string? group = null) => _factory.Defer(callback, group);
+    public static DeferredProp<T> Defer<T>(Func<Task<T?>> callback, string? group = null) => _factory.Defer(callback, group);
     
     public static AlwaysProp<T> Always<T>(Func<T?> callback) => _factory.Always(callback);
     public static AlwaysProp<T> Always<T>(Func<Task<T?>> callback) => _factory.Always(callback);

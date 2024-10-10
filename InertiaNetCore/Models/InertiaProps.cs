@@ -13,7 +13,7 @@ public class InertiaProps : Dictionary<string, object?>
 
         foreach (var (key, value) in this)
         {
-            if(partials is null && value is ILazyProp)
+            if(partials is null && value is IIgnoreFirstProp)
                 continue;
             
             if(partials is not null && value is not IAlwaysProp && !partials.Contains(key, StringComparer.InvariantCultureIgnoreCase))

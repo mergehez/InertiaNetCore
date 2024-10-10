@@ -113,6 +113,8 @@ internal class ResponseFactory(IHttpContextAccessor contextAccessor, SsrGateway 
     
     public LazyProp<T> Lazy<T>(Func<T?> callback) => new(callback);
     public LazyProp<T> Lazy<T>(Func<Task<T?>> callback) => new(callback);
+    public DeferredProp<T> Defer<T>(Func<T?> callback, string? group) => new(callback, group);
+    public DeferredProp<T> Defer<T>(Func<Task<T?>> callback, string? group) => new(callback, group);
     public AlwaysProp<T> Always<T>(Func<T?> callback) => new(callback);
     public AlwaysProp<T> Always<T>(Func<Task<T?>> callback) => new(callback);
 }

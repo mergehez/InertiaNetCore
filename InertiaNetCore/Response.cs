@@ -1,6 +1,7 @@
 using System.Text.Json;
 using InertiaNetCore.Extensions;
 using InertiaNetCore.Models;
+using InertiaNetCore.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -21,6 +22,7 @@ public class Response(string component, InertiaProps props, string rootView, str
             Version = version,
             Url = context.HttpContext.RequestedUri(),
             Props = await GetFinalProps(context),
+            DeferredProps = GetDeferredProps(context),
         };
         
         if (!context.HttpContext.IsInertiaRequest())
@@ -68,6 +70,20 @@ public class Response(string component, InertiaProps props, string rootView, str
         flash.Clear(false);
         
         return finalProps;
+    }
+    
+    private Dictionary<string, List<string>> GetDeferredProps(ActionContext context)
+    {
+        if (context.IsInertiaPartialComponent(component))
+            return [];
+
+        return props
+            .Where(prop => prop.Value is IDeferredProp)
+            .GroupBy(prop => (prop.Value as IDeferredProp)!.Group)
+            .ToDictionary(
+                g => g.Key ?? g.Select(x => x.Key).First(),
+                g => g.Select(x => x.Key).ToList()
+                );
     }
     
     private static Dictionary<string, string> GetErrors(ActionContext context)

@@ -2,6 +2,12 @@ using Microsoft.AspNetCore.Html;
 
 namespace InertiaNetCore.Utils;
 
+public interface IViteBuilder
+{
+    HtmlString ReactRefresh();
+    HtmlString Input(string path);
+}
+
 internal interface IInvokableProp
 {
     internal Task<object?> InvokeToObject();
@@ -9,11 +15,11 @@ internal interface IInvokableProp
 
 internal interface IAlwaysProp;
 
-internal interface ILazyProp;
+internal interface IIgnoreFirstProp;
 
+internal interface ILazyProp : IIgnoreFirstProp;
 
-public interface IViteBuilder
+internal interface IDeferredProp : IIgnoreFirstProp
 {
-    HtmlString ReactRefresh();
-    HtmlString Input(string path);
+    string? Group { get; }
 }

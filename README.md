@@ -333,6 +333,6 @@ export default defineConfig({
 
 ## Work in progress
 
-- [ ] Deferred props
+- [x] Deferred props
 - [ ] Merging props
 - [ ] History encryption
