@@ -19,7 +19,7 @@ internal class ResponseFactory(IHttpContextAccessor contextAccessor, SsrGateway 
     {
         props ??= [];
 
-        return new Response(component, props, options.Value.RootView, GetVersion(), options.Value.JsonSerializerOptions);
+        return new Response(component, props, GetVersion(), options.Value);
     }
 
     public async Task<IHtmlContent> Head(dynamic model)

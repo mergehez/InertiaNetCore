@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace InertiaNetCore;
 
-public class Response(string component, InertiaProps props, string rootView, string? version, object jsonSerializerOptions)
+public class Response(string component, InertiaProps props, string? version, InertiaOptions options)
     : IActionResult
 {
     private IDictionary<string, object>? _viewData;
@@ -38,7 +38,7 @@ public class Response(string component, InertiaProps props, string rootView, str
                     viewData[key] = value;
             }
 
-            await new ViewResult { ViewName = rootView, ViewData = viewData }.ExecuteResultAsync(context);
+            await new ViewResult { ViewName = options.RootView, ViewData = viewData }.ExecuteResultAsync(context);
         }
         else
         {
@@ -77,13 +77,23 @@ public class Response(string component, InertiaProps props, string rootView, str
         if (context.IsInertiaPartialComponent(component))
             return [];
 
-        return props
-            .Where(prop => prop.Value is IDeferredProp)
-            .GroupBy(prop => (prop.Value as IDeferredProp)!.Group)
+        var tmp = new Dictionary<string, string>();
+        foreach (var (key, value) in props)
+        {
+            if (value is IDeferredProp deferredProp)
+                tmp[key] = deferredProp.Group ?? $"{key}_{Random.Shared.Next()}";
+        }
+        
+        // apply json serialization options to dictionary keys before grouping them
+        var jsonOptions = options.JsonSerializerOptions as JsonSerializerOptions;
+        tmp = JsonSerializer.Deserialize<Dictionary<string, string>>(JsonSerializer.Serialize(tmp, jsonOptions), jsonOptions);
+        
+        return tmp!
+            .GroupBy(prop => prop.Value)
             .ToDictionary(
-                g => g.Key ?? g.Select(x => x.Key).First(),
+                g => g.Key,
                 g => g.Select(x => x.Key).ToList()
-                );
+            );
     }
     
     private static Dictionary<string, string> GetErrors(ActionContext context)
