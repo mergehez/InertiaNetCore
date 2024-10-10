@@ -30,7 +30,6 @@ Feel free to contribute to the project by creating issues or pull requests.
   * [Server-side rendering](#server-side-rendering)
   * [Vite helper](#vite-helper)
     - [Examples](#examples-1)
-- [Work in progress](#work-in-progress)
 
 ## Demo
 
