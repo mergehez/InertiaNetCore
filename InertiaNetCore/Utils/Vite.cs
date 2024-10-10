@@ -8,12 +8,6 @@ using Microsoft.Extensions.Options;
 
 namespace InertiaNetCore.Utils;
 
-public interface IViteBuilder
-{
-    HtmlString ReactRefresh();
-    HtmlString Input(string path);
-}
-
 internal class ViteBuilder(IOptions<ViteOptions> options) : IViteBuilder
 {
     /// <summary>

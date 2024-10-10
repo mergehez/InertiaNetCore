@@ -1,6 +1,5 @@
 namespace InertiaNetCore.Utils;
 
-internal interface IAlwaysProp;
 
 /// <summary>
 /// ALWAYS included on standard visits <br/>

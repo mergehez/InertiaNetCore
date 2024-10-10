@@ -1,10 +1,5 @@
 namespace InertiaNetCore.Utils;
 
-internal interface IInvokableProp
-{
-    internal Task<object?> InvokeToObject();
-}
-
 public abstract class InvokableProp<T>: IInvokableProp
 {
     private readonly Func<T?>? _callback;

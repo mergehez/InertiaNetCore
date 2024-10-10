@@ -1,7 +1,5 @@
 namespace InertiaNetCore.Utils;
 
-internal interface ILazyProp;
-
 /// <summary>
 /// NEVER included on standard visits <br/>
 /// OPTIONALLY included on partial reloads (you should call <c>router.reload({ only: ["propName"] })</c>) <br/>
