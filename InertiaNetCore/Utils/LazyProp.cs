@@ -5,7 +5,7 @@ namespace InertiaNetCore.Utils;
 /// OPTIONALLY included on partial reloads (you should call <c>router.reload({ only: ["propName"] })</c>) <br/>
 /// ONLY evaluated when needed
 /// </summary>
-public class LazyProp<T> : InvokableProp<T>, ILazyProp
+public class LazyProp<T> : InvokableProp<T>, IIgnoreFirstProp
 {
     public LazyProp(Func<T?> callback) : base(callback)
     {

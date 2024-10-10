@@ -44,4 +44,7 @@ public static class Inertia
     
     public static AlwaysProp<T> Always<T>(Func<T?> callback) => _factory.Always(callback);
     public static AlwaysProp<T> Always<T>(Func<Task<T?>> callback) => _factory.Always(callback);
+    
+    public static MergeProp<T> Merge<T>(Func<T?> callback) => _factory.Merge(callback);
+    public static MergeProp<T> Merge<T>(Func<Task<T?>> callback) => _factory.Merge(callback);
 }

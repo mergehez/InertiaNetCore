@@ -117,4 +117,6 @@ internal class ResponseFactory(IHttpContextAccessor contextAccessor, SsrGateway 
     public DeferredProp<T> Defer<T>(Func<Task<T?>> callback, string? group) => new(callback, group);
     public AlwaysProp<T> Always<T>(Func<T?> callback) => new(callback);
     public AlwaysProp<T> Always<T>(Func<Task<T?>> callback) => new(callback);
+    public MergeProp<T> Merge<T>(Func<T?> callback) => new(callback);
+    public MergeProp<T> Merge<T>(Func<Task<T?>> callback) => new(callback);
 }

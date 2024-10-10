@@ -17,9 +17,12 @@ internal interface IAlwaysProp;
 
 internal interface IIgnoreFirstProp;
 
-internal interface ILazyProp : IIgnoreFirstProp;
-
-internal interface IDeferredProp : IIgnoreFirstProp
+internal interface IDeferredProp : IIgnoreFirstProp, IMergeableProp
 {
     string? Group { get; }
+}
+
+public interface IMergeableProp
+{
+    bool Merge { get; set; }
 }

@@ -13,7 +13,7 @@ public class Response(string component, InertiaProps props, string? version, Ine
     : IActionResult
 {
     private IDictionary<string, object>? _viewData;
-    
+
     public async Task ExecuteResultAsync(ActionContext context)
     {
         var page = new InertiaPage
@@ -23,8 +23,9 @@ public class Response(string component, InertiaProps props, string? version, Ine
             Url = context.HttpContext.RequestedUri(),
             Props = await GetFinalProps(context),
             DeferredProps = GetDeferredProps(context),
+            MergeProps = GetMergeProps(context)
         };
-        
+
         if (!context.HttpContext.IsInertiaRequest())
         {
             var viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), context.ModelState)
@@ -45,33 +46,36 @@ public class Response(string component, InertiaProps props, string? version, Ine
             context.HttpContext.Response.Headers.Append("X-Inertia", "true");
             context.HttpContext.Response.Headers.Append("Vary", "Accept");
             context.HttpContext.Response.StatusCode = 200;
-            
-            var jsonResult = new JsonResult(page, jsonSerializerOptions);
+
+            var jsonResult = new JsonResult(page, options.JsonSerializerOptions);
             await jsonResult.ExecuteResultAsync(context);
         }
     }
-    
+
     private async Task<InertiaProps> GetFinalProps(ActionContext context)
     {
-        var partials = context.IsInertiaPartialComponent(component) ? context.GetPartialData() : null;
+        var isPartial = context.IsInertiaPartialComponent(component);
+        var partials = isPartial ? context.GetPartialData() : [];
+        var excepts = isPartial ? context.GetInertiaExcepts() : [];
+
         var shared = context.HttpContext.Features.Get<InertiaSharedProps>();
-        var flash = context.HttpContext.Features.Get<InertiaFlashMessages>() 
+        var flash = context.HttpContext.Features.Get<InertiaFlashMessages>()
                     ?? InertiaFlashMessages.FromSession(context.HttpContext);
         var errors = GetErrors(context);
-        
-        var finalProps = await props.ToProcessedProps(partials);
-        
+
+        var finalProps = await props.ToProcessedProps(isPartial, partials, excepts);
+
         finalProps = finalProps
             .Merge(shared?.GetData())
             .AddTimeStamp()
             .AddFlash(flash.GetData())
             .AddErrors(errors);
-        
+
         flash.Clear(false);
-        
+
         return finalProps;
     }
-    
+
     private Dictionary<string, List<string>> GetDeferredProps(ActionContext context)
     {
         if (context.IsInertiaPartialComponent(component))
@@ -95,7 +99,26 @@ public class Response(string component, InertiaProps props, string? version, Ine
                 g => g.Select(x => x.Key).ToList()
             );
     }
-    
+
+    private List<string> GetMergeProps(ActionContext context)
+    {
+        var resetData = context.GetInertiaResetData();
+
+        var tmp = new Dictionary<string, string>();
+        
+        foreach (var (key, value) in props)
+        {
+            if (value is IMergeableProp { Merge: true } && !resetData.Contains(key))
+                tmp[key] = key;
+        }
+        
+        // apply json serialization options to dictionary keys before grouping them
+        var jsonOptions = options.JsonSerializerOptions as JsonSerializerOptions;
+        tmp = JsonSerializer.Deserialize<Dictionary<string, string>>(JsonSerializer.Serialize(tmp, jsonOptions), jsonOptions);
+        
+        return tmp!.Select(prop => prop.Key).ToList();
+    }
+
     private static Dictionary<string, string> GetErrors(ActionContext context)
     {
         var sessionErrors = context.HttpContext.Session.GetString("errors");
@@ -103,18 +126,18 @@ public class Response(string component, InertiaProps props, string? version, Ine
         {
             var errors = JsonSerializer.Deserialize<Dictionary<string, string>>(sessionErrors);
             context.HttpContext.Session.Remove("errors");
-            
-            if(errors is not null)
+
+            if (errors is not null)
                 return errors;
         }
-        
-        if (context.ModelState.IsValid) 
+
+        if (context.ModelState.IsValid)
             return [];
-        
+
         return context.ModelState.ToDictionary(
             kv => kv.Key,
             kv => kv.Value?.Errors.FirstOrDefault()?.ErrorMessage ?? ""
-            );
+        );
     }
 
     public Response WithViewData(IDictionary<string, object> viewData)

@@ -6,13 +6,25 @@ namespace InertiaNetCore.Extensions;
 
 internal static class InertiaExtensions
 {
-    internal static List<string> GetPartialData(this ActionContext context)
+    private static List<string> GetInertiaHeaderData(this ActionContext context, string header)
     {
-        return context.HttpContext.Request.Headers.TryGetValue("X-Inertia-Partial-Data", out var data)
+        return context.HttpContext.Request.Headers.TryGetValue(header, out var data)
             ? data.FirstOrDefault()?.Split(",")
                 .Where(s => !string.IsNullOrEmpty(s))
                 .ToList() ?? []
             : [];
+    }
+    internal static List<string> GetPartialData(this ActionContext context)
+    {
+        return context.GetInertiaHeaderData("X-Inertia-Partial-Data");
+    }
+    internal static List<string> GetInertiaExcepts(this ActionContext context)
+    {
+        return context.GetInertiaHeaderData("X-Inertia-Partial-Except");
+    }
+    internal static List<string> GetInertiaResetData(this ActionContext context)
+    {
+        return context.GetInertiaHeaderData("X-Inertia-Reset");
     }
 
     internal static bool IsInertiaPartialComponent(this ActionContext context, string component)

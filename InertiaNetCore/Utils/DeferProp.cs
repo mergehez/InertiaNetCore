@@ -6,6 +6,7 @@ namespace InertiaNetCore.Utils;
 /// </summary>
 public class DeferredProp<T> : InvokableProp<T>, IDeferredProp
 {
+    public bool Merge { get; set; }
     public string? Group { get; }
 
     public DeferredProp(Func<T?> callback, string? group) : base(callback)

@@ -4,19 +4,19 @@ namespace InertiaNetCore.Models;
 
 public class InertiaProps : Dictionary<string, object?>
 {
-    internal async Task<InertiaProps> ToProcessedProps(List<string>? partials)
+    internal async Task<InertiaProps> ToProcessedProps(bool isPartial, List<string> partials, List<string> excepts)
     {
         var props = new InertiaProps();
         
-        if(partials is not null && partials.Count == 0)
-            partials = null;
-
         foreach (var (key, value) in this)
         {
-            if(partials is null && value is IIgnoreFirstProp)
+            if(isPartial && excepts.Contains(key, StringComparer.InvariantCultureIgnoreCase))
                 continue;
             
-            if(partials is not null && value is not IAlwaysProp && !partials.Contains(key, StringComparer.InvariantCultureIgnoreCase))
+            if(!isPartial && value is IIgnoreFirstProp)
+                continue;
+            
+            if(isPartial && value is not IAlwaysProp && !partials.Contains(key, StringComparer.InvariantCultureIgnoreCase))
                 continue;
             
             props.Add(key, value switch
