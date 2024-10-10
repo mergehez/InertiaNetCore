@@ -14,12 +14,14 @@ namespace InertiaNetCore;
 internal class ResponseFactory(IHttpContextAccessor contextAccessor, SsrGateway ssrGateway, IOptions<InertiaOptions> options)
 {
     private object? _version;
+    private bool? _encryptHistory;
+    private bool _clearHistory;
 
     public Response Render(string component, InertiaProps? props = default)
     {
         props ??= [];
 
-        return new Response(component, props, GetVersion(), options.Value);
+        return new Response(component, props, GetVersion(), options.Value, _encryptHistory, _clearHistory);
     }
 
     public async Task<IHtmlContent> Head(dynamic model)
@@ -109,6 +111,16 @@ internal class ResponseFactory(IHttpContextAccessor contextAccessor, SsrGateway 
         flash.Set(key, value);
 
         context.Features.Set(flash);
+    }
+    
+    public void EnableEncryptHistory(bool enable = true)
+    {
+        _encryptHistory = enable;
+    }
+    
+    public void ClearHistory()
+    {
+        _clearHistory = true;
     }
     
     public LazyProp<T> Lazy<T>(Func<T?> callback) => new(callback);

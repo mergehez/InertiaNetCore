@@ -9,10 +9,11 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace InertiaNetCore;
 
-public class Response(string component, InertiaProps props, string? version, InertiaOptions options)
+public class Response(string component, InertiaProps props, string? version, InertiaOptions options, bool? encryptHistory, bool clearHistory)
     : IActionResult
 {
     private IDictionary<string, object>? _viewData;
+    private readonly InertiaOptions _options = options;
 
     public async Task ExecuteResultAsync(ActionContext context)
     {
@@ -23,7 +24,9 @@ public class Response(string component, InertiaProps props, string? version, Ine
             Url = context.HttpContext.RequestedUri(),
             Props = await GetFinalProps(context),
             DeferredProps = GetDeferredProps(context),
-            MergeProps = GetMergeProps(context)
+            MergeProps = GetMergeProps(context),
+            ClearHistory = clearHistory,
+            EncryptHistory = encryptHistory ?? options.EncryptHistory
         };
 
         if (!context.HttpContext.IsInertiaRequest())
@@ -39,7 +42,7 @@ public class Response(string component, InertiaProps props, string? version, Ine
                     viewData[key] = value;
             }
 
-            await new ViewResult { ViewName = options.RootView, ViewData = viewData }.ExecuteResultAsync(context);
+            await new ViewResult { ViewName = _options.RootView, ViewData = viewData }.ExecuteResultAsync(context);
         }
         else
         {
@@ -47,7 +50,7 @@ public class Response(string component, InertiaProps props, string? version, Ine
             context.HttpContext.Response.Headers.Append("Vary", "Accept");
             context.HttpContext.Response.StatusCode = 200;
 
-            var jsonResult = new JsonResult(page, options.JsonSerializerOptions);
+            var jsonResult = new JsonResult(page, _options.JsonSerializerOptions);
             await jsonResult.ExecuteResultAsync(context);
         }
     }
@@ -89,7 +92,7 @@ public class Response(string component, InertiaProps props, string? version, Ine
         }
         
         // apply json serialization options to dictionary keys before grouping them
-        var jsonOptions = options.JsonSerializerOptions as JsonSerializerOptions;
+        var jsonOptions = _options.JsonSerializerOptions as JsonSerializerOptions;
         tmp = JsonSerializer.Deserialize<Dictionary<string, string>>(JsonSerializer.Serialize(tmp, jsonOptions), jsonOptions);
         
         return tmp!
@@ -113,7 +116,7 @@ public class Response(string component, InertiaProps props, string? version, Ine
         }
         
         // apply json serialization options to dictionary keys before grouping them
-        var jsonOptions = options.JsonSerializerOptions as JsonSerializerOptions;
+        var jsonOptions = _options.JsonSerializerOptions as JsonSerializerOptions;
         tmp = JsonSerializer.Deserialize<Dictionary<string, string>>(JsonSerializer.Serialize(tmp, jsonOptions), jsonOptions);
         
         return tmp!.Select(prop => prop.Key).ToList();

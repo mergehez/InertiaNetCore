@@ -13,6 +13,8 @@ public class InertiaOptions
     
     public Action<SessionOptions> ConfigureSession { get; set; } = _ => { };
     
+    public bool EncryptHistory { get; set; }
+    
     private static JsonSerializerOptions DefaultJsonSerializerOptions { get; } = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
