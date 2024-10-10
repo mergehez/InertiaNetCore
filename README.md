@@ -1,4 +1,4 @@
-# Inertia.js ASP.NET Adapter
+# Inertia.js ASP.NET Core Adapter
 
 [![NuGet](https://img.shields.io/nuget/v/InertiaNetCore?style=flat-square&color=blue)](https://www.nuget.org/packages/InertiaNetCore)
 [![NuGet](https://img.shields.io/nuget/dt/InertiaNetCore?style=flat-square)](https://www.nuget.org/packages/InertiaNetCore)
@@ -27,6 +27,7 @@ Feel free to contribute to the project by creating issues or pull requests.
   * [Server-side rendering](#server-side-rendering)
   * [Vite helper](#vite-helper)
     - [Examples](#examples-1)
+- [Work in progress](#work-in-progress)
 
 ## Demo
 
@@ -328,3 +329,9 @@ export default defineConfig({
     },
 });
 ```
+
+
+## Work in progress
+
+- [ ] Deferred props
+- [ ] Merging props
