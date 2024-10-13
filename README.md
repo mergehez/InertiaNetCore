@@ -90,7 +90,6 @@ Create a file `/Views/App.cshtml`.
 
 ```html
 @using InertiaNetCore
-@using InertiaNetCore.Utils
 
 <!DOCTYPE html>
 <html lang="en">
@@ -288,7 +287,6 @@ If you want to enable SSR in your Inertia app, remember to add `Inertia.Head()` 
 
 ```diff
 @using InertiaNetCore
-@using InertiaNetCore.Utils
 
 <!DOCTYPE html>
 <html lang="en">
@@ -350,7 +348,6 @@ Here's an example for a TypeScript Vue app with Hot Reload:
 
 ```html
 @using InertiaNetCore
-@using InertiaNetCore.Utils
 
 <!DOCTYPE html>
 <html lang="en">

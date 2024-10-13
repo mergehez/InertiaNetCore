@@ -2,11 +2,12 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using InertiaNetCore.Models;
+using InertiaNetCore.Utils;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 
-namespace InertiaNetCore.Utils;
+namespace InertiaNetCore;
 
 internal class ViteBuilder(IOptions<ViteOptions> options) : IViteBuilder
 {
