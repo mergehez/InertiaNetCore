@@ -40,7 +40,7 @@ internal class ResponseFactory(IHttpContextAccessor contextAccessor, SsrGateway 
         return response.Value.GetHead();
     }
 
-    public async Task<IHtmlContent> Html(dynamic model)
+    public async Task<IHtmlContent> Html(InertiaPage model)
     {
         if (options.Value.SsrEnabled)
         {
@@ -49,7 +49,7 @@ internal class ResponseFactory(IHttpContextAccessor contextAccessor, SsrGateway 
             var response = context.Features.Get<SsrResponse?>();
             response ??= await ssrGateway.Dispatch(model, options.Value.SsrUrl);
 
-            if (response.Value != default)
+            if (response != null && response.Value != default)
             {
                 context.Features.Set(response);
                 return response.Value.GetBody();

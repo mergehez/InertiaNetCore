@@ -287,6 +287,7 @@ If you want to enable SSR in your Inertia app, remember to add `Inertia.Head()` 
 
 ```diff
 @using InertiaNetCore
+@model InertiaNetCore.InertiaPage
 
 <!DOCTYPE html>
 <html lang="en">

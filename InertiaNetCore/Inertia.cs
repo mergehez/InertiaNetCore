@@ -19,9 +19,9 @@ public static class Inertia
     
     public static Response Render(string component, Dictionary<string, object?>? props) => _factory.Render(component, InertiaProps.Create(props));
 
-    public static Task<IHtmlContent> Head(dynamic model) => _factory.Head(model);
+    public static Task<IHtmlContent> Head(InertiaPage model) => _factory.Head(model);
 
-    public static Task<IHtmlContent> Html(dynamic model) => _factory.Html(model);
+    public static Task<IHtmlContent> Html(InertiaPage model) => _factory.Html(model);
 
     public static void SetVersion(object? version) => _factory.SetVersion(version);
 
