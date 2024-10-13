@@ -5,7 +5,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddInertia();
+builder.Services.AddInertia(o =>
+{
+    o.ConfigureSession = options =>
+    {
+        options.Cookie.Name = "InertiaSession";
+    };
+});
 builder.Services.AddViteHelper();
 
 
