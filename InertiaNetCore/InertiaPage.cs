@@ -1,4 +1,6 @@
-namespace InertiaNetCore.Models;
+using InertiaNetCore.Models;
+
+namespace InertiaNetCore;
 
 public readonly record struct InertiaPage
 {
