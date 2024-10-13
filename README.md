@@ -70,13 +70,12 @@ For example, you can change JSON serializer settings to use `Newtonsoft.Json` in
 ```csharp
 builder.Services.AddInertia(options =>
 {
-    options.JsonSerializerSettings = new JsonSerializerSettings
+    var options = new JsonSerializerSettings
     {
         ContractResolver = new CamelCasePropertyNamesContractResolver(),
         ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
     };
-    
-    options.JsonSerializeFn = model => JsonConvert.SerializeObject(model, options.JsonSerializerSettings);
+    o.Json = InertiaJsonOptions.Create(options); // there is also an optional parameter to customize the "Serialize" method
 });
 ```
 

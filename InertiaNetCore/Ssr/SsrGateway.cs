@@ -9,7 +9,7 @@ internal class SsrGateway(IHttpClientFactory httpClientFactory, IOptions<Inertia
 {
     public async Task<SsrResponse?> Dispatch(dynamic model, string url)
     {
-        var json = options.Value.JsonSerializeFn(model, options.Value);
+        var json = options.Value.Json.Serialize(model);
         
         var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
 

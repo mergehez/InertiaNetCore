@@ -50,7 +50,7 @@ public class Response(string component, InertiaProps props, string? version, Ine
             context.HttpContext.Response.Headers.Append("Vary", "Accept");
             context.HttpContext.Response.StatusCode = 200;
 
-            var jsonResult = new JsonResult(page, _options.JsonSerializerOptions);
+            var jsonResult = new JsonResult(page, _options.Json.Options);
             await jsonResult.ExecuteResultAsync(context);
         }
     }
@@ -92,8 +92,7 @@ public class Response(string component, InertiaProps props, string? version, Ine
         }
         
         // apply json serialization options to dictionary keys before grouping them
-        var jsonOptions = _options.JsonSerializerOptions as JsonSerializerOptions;
-        tmp = JsonSerializer.Deserialize<Dictionary<string, string>>(JsonSerializer.Serialize(tmp, jsonOptions), jsonOptions);
+        tmp = JsonSerializer.Deserialize<Dictionary<string, string>>(_options.Json.Serialize(tmp));
         
         return tmp!
             .GroupBy(prop => prop.Value)
@@ -116,8 +115,7 @@ public class Response(string component, InertiaProps props, string? version, Ine
         }
         
         // apply json serialization options to dictionary keys before grouping them
-        var jsonOptions = _options.JsonSerializerOptions as JsonSerializerOptions;
-        tmp = JsonSerializer.Deserialize<Dictionary<string, string>>(JsonSerializer.Serialize(tmp, jsonOptions), jsonOptions);
+        tmp = JsonSerializer.Deserialize<Dictionary<string, string>>(_options.Json.Serialize(tmp));
         
         return tmp!.Select(prop => prop.Key).ToList();
     }
