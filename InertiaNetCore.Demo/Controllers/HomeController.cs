@@ -1,6 +1,6 @@
 using System.Reflection;
+using System.Security.Cryptography;
 using InertiaNetCore.Models;
-using InertiaNetCore.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InertiaNetCore.Demo.Controllers;
@@ -22,9 +22,19 @@ public class HomeController : Controller
                 await Task.Delay(2000);
                 return now;
             }),
+            ["Merge"] = Inertia.Merge(() => new[] { RandomNumberGenerator.GetInt32(10) }),
+            ["Deferred"] = Inertia.Defer(async () =>
+            {
+                await Task.Delay(2000);
+                return now;
+            }),
+            ["Deferred1"] = Inertia.Defer(() => "Deferred 1", "group"),
+            ["Deferred2"] = Inertia.Defer(() => "Deferred 2", "group"),
+            ["Deferred3"] = Inertia.Defer(() => "Deferred 3", "group"),
+            ["Deferred4"] = Inertia.Defer(() => "Deferred 4", "group"),
         });
     }
-    
+
     private static string GetNow()
     {
         return DateTime.UtcNow.ToString("O").Split('T')[1].Replace(".", " ");

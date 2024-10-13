@@ -1,1 +1,0 @@
-import{d as n,Q as r,a as p,b as e,t as a,u as s,e as l,F as u,o as m}from"./app-CLOpvECd.js";/* empty css            */const f=n({__name:"PageAbout",setup(c){const t=r();return(i,o)=>(m(),p(u,null,[o[0]||(o[0]=e("h1",{class:"font-bold text-2xl mb-4"},"About",-1)),e("p",null,[e("b",null,a(s(t).props.name),1),l(" v"+a(s(t).props.version),1)])],64))}});export{f as default};

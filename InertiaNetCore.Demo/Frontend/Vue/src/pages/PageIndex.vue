@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { router, usePage } from '@inertiajs/vue3';
 import { ref, unref } from 'vue';
-import { globalState } from '@/utils/globalState';
 import Spinner from '@/components/Spinner.vue';
+import { Deferred } from '@inertiajs/vue3';
 
 const page = usePage<{
     nowDirect: string;
@@ -13,6 +13,7 @@ const page = usePage<{
 
 const lastProps = ref(unref(page.props));
 const loadingNowLazyAsync = ref(false);
+
 function reloadRouter(opts?: any) {
     lastProps.value = unref(page.props);
     router.reload(opts);
@@ -35,6 +36,12 @@ public IActionResult Index()
         ["NowAlways"] = Inertia.Always(() => now),
         ["NowLazy"] = Inertia.Lazy(() => now),
         ["NowLazyAsync"] = Inertia.Lazy(async () =>
+        {
+            await Task.Delay(2000);
+            return now;
+        }),
+        ["Merge"] = Inertia.Merge(() => new[] { RandomNumberGenerator.GetInt32(10) }),
+        ["Deferred"] = Inertia.Defer(async () =>
         {
             await Task.Delay(2000);
             return now;
@@ -62,14 +69,19 @@ public IActionResult Index()
                     <td class="font-bold pl-4" :class="lastProps.nowAlways == page.props.nowAlways ? '' : 'text-green-600'">({{ lastProps.nowAlways == page.props.nowAlways ? 'same' : 'changed' }})</td>
                 </tr>
                 <tr>
-                  <td class="font-bold pr-4">NowLazy</td>
-                  <td class="font-mono" style="width: 200px">{{ page.props.nowLazy }}</td>
-                  <td class="font-bold pl-4" :class="lastProps.nowLazy == page.props.nowLazy ? '' : 'text-green-600'">({{ lastProps.nowLazy == page.props.nowLazy ? 'same' : 'changed' }})</td>
+                    <td class="font-bold pr-4">NowLazy</td>
+                    <td class="font-mono" style="width: 200px">{{ page.props.nowLazy }}</td>
+                    <td class="font-bold pl-4" :class="lastProps.nowLazy == page.props.nowLazy ? '' : 'text-green-600'">({{ lastProps.nowLazy == page.props.nowLazy ? 'same' : 'changed' }})</td>
                 </tr>
                 <tr>
-                  <td class="font-bold pr-4">NowLazyAsync</td>
-                  <td class="font-mono" style="width: 200px">{{ page.props.nowLazyAsync }}</td>
-                  <td class="font-bold pl-4" :class="lastProps.nowLazyAsync == page.props.nowLazyAsync ? '' : 'text-green-600'">({{ lastProps.nowLazyAsync == page.props.nowLazyAsync ? 'same' : 'changed' }})</td>
+                    <td class="font-bold pr-4">NowLazyAsync</td>
+                    <td class="font-mono" style="width: 200px">{{ page.props.nowLazyAsync }}</td>
+                    <td class="font-bold pl-4" :class="lastProps.nowLazyAsync == page.props.nowLazyAsync ? '' : 'text-green-600'">({{ lastProps.nowLazyAsync == page.props.nowLazyAsync ? 'same' : 'changed' }})</td>
+                </tr>
+                <tr>
+                    <td class="font-bold pr-4">Merge</td>
+                    <td class="font-mono" style="width: 200px">{{ page.props.merge }}</td>
+                    <td class="font-bold pl-4" :class="lastProps.merge == page.props.merge ? '' : 'text-green-600'">({{ lastProps.merge == page.props.merge ? 'same' : 'changed' }})</td>
                 </tr>
             </tbody>
         </table>
@@ -81,11 +93,21 @@ public IActionResult Index()
             <button @click="reloadRouter({ only: ['nowAlways'] })" class="bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 hover:opacity-90 border px-4 rounded py-1">Reload router (only NowAlways)</button>
             <button @click="reloadRouter({ only: ['nowLazy'] })" class="bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 hover:opacity-90 border px-4 rounded py-1">Reload router (only NowLazy)</button>
             <button
-                @click="reloadRouter({ only: ['nowLazyAsync'], onBefore: () => loadingNowLazyAsync = true, onFinish: () => loadingNowLazyAsync = false })"
-                class="bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 hover:opacity-90 border px-4 rounded py-1 flex items-center gap-2">
+                @click="reloadRouter({ only: ['nowLazyAsync'], onBefore: () => (loadingNowLazyAsync = true), onFinish: () => (loadingNowLazyAsync = false) })"
+                class="bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 hover:opacity-90 border px-4 rounded py-1 flex items-center gap-2"
+            >
                 <Spinner :visible="loadingNowLazyAsync" class="size-4" />
                 Reload router (only NowLazyAsync)
             </button>
+            <button @click="reloadRouter({ only: ['merge'] })" class="bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 hover:opacity-90 border px-4 rounded py-1">Reload router (only Merge)</button>
         </div>
+
+        <Deferred data="deferred">
+            <template #fallback>
+                <div class="mt-3"><b>deferred</b> loading...</div>
+            </template>
+
+            <div class="mt-3"><b>deferred</b> loaded: {{ page.props.deferred }}</div>
+        </Deferred>
     </div>
 </template>

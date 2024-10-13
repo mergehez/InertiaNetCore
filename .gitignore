@@ -3,3 +3,6 @@ obj/
 .idea
 InertiaNetCore.sln.DotSettings.user
 global.json
+bun.lockb
+package-lock.json
+tsconfig.tsbuildinfo
