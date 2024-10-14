@@ -18,9 +18,6 @@ Feel free to contribute to the project by creating issues or pull requests.
 - [Installation](#installation)
 - [Getting started](#getting-started)
 - [Configuration](#configuration)
-- [Usage](#usage)
-  * [Frontend](#frontend)
-  * [Backend](#backend)
 - [Features](#features)
   * [Shared data](#shared-data)
   * [Flash Messages](#flash-messages)
@@ -39,11 +36,21 @@ If you want to see how it exactly works, you can clone this repository and play 
 
 ## Installation
 
-1. Using Package Manager: `PM> Install-Package InertiaNetCore`
-2. Using .NET CLI: `dotnet add package InertiaNetCore`
+1. Using Package Manager:
+```shell
+Install-Package InertiaNetCore
+```
+
+2. Using .NET CLI:
+```shell
+dotnet add package InertiaNetCore
+```
+
 3. Using NuGet Package Manager: search for `InertiaNetCore`
 
 ## Getting started
+
+### 1. Enabling the library
 
 You need to add few lines to the `Program.cs` or `Starup.cs` file.
 
@@ -61,35 +68,15 @@ app.UseInertia();
 
 ```
 
-## Configuration
+Go to the [Configuration](#configuration) section to see all available options.
 
-Both `AddInertia` and `AddViteHelper` methods have optional parameters to configure the library.
+### 2. Creating the root view for the app
 
-For example, you can change JSON serializer settings to use `Newtonsoft.Json` instead of `System.Text.Json`.
-
-```csharp
-builder.Services.AddInertia(options =>
-{
-    var options = new JsonSerializerSettings
-    {
-        ContractResolver = new CamelCasePropertyNamesContractResolver(),
-        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-    };
-    o.Json = InertiaJsonOptions.Create(options); // there is also an optional parameter to customize the "Serialize" method
-});
-```
-
-
-Visit the [InertiaOptions](InertiaNetCore/Models/InertiaOptions.cs) and [ViteOptions](InertiaNetCore/Models/ViteOptions.cs) classes to see all available options.
-
-## Usage
-
-### Frontend
-
-Create a file `/Views/App.cshtml`.
+Create the file `/Views/App.cshtml` with the following content:
 
 ```html
 @using InertiaNetCore
+@model InertiaPage
 
 <!DOCTYPE html>
 <html lang="en">
@@ -109,7 +96,7 @@ Create a file `/Views/App.cshtml`.
 > [!NOTE]
 > Default root view is `App.cshtml` but you can change it by setting `RootView` in `AddInertia` method in `Program.cs`.
 
-### Backend
+### 3. Passing data to the frontend
 
 To pass data to a page component, use `Inertia.Render()`.
 
@@ -125,7 +112,8 @@ public IActionResult About()
 }
 ```
 
-To make a form endpoint, remember to add `[FromBody]` to your model parameter, because the request data is passed using
+> [!NOTE]
+> To make a form endpoint, remember to add `[FromBody]` to your model parameter, because the request data is passed using
 JSON.
 
 ```csharp
@@ -144,6 +132,28 @@ public async Task<IActionResult> Create([FromBody] Post post)
     return RedirectToAction("Index");
 }
 ```
+
+
+## Configuration
+
+Both `AddInertia` and `AddViteHelper` methods have optional parameters to configure the library.
+
+For example, you can change JSON serializer settings to use `Newtonsoft.Json` instead of `System.Text.Json`.
+
+```csharp
+builder.Services.AddInertia(options =>
+{
+    var options = new JsonSerializerSettings
+    {
+        ContractResolver = new CamelCasePropertyNamesContractResolver(),
+        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+    };
+    o.Json = InertiaJsonOptions.Create(options); // there is also an optional parameter to customize the "Serialize" method
+});
+```
+
+Visit the [InertiaOptions](InertiaNetCore/Models/InertiaOptions.cs) and [ViteOptions](InertiaNetCore/Models/ViteOptions.cs) classes to see all available options.
+
 
 ## Features
 
