@@ -37,7 +37,7 @@ internal static class InertiaExtensions
         return Uri.UnescapeDataString(context.Request.GetEncodedPathAndQuery());
     }
 
-    internal static bool IsInertiaRequest(this HttpContext context)
+    public static bool IsInertiaRequest(this HttpContext context)
     {
         return bool.TryParse(context.Request.Headers["X-Inertia"], out _);
     }
