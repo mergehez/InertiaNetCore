@@ -19,14 +19,18 @@ public class InertiaProps : Dictionary<string, object?>
             if(isPartial && value is not IAlwaysProp && !partials.Contains(key, StringComparer.InvariantCultureIgnoreCase))
                 continue;
             
-            props.Add(key, value switch
+            var computed = value switch
             {
-                Func<Task<object?>> f => await f.Invoke(),
                 Func<object?> f => f.Invoke(),
                 Delegate d => d.DynamicInvoke(),
                 IInvokableProp l => await l.InvokeToObject(),
                 _ => value
-            });
+            };
+
+            if (computed is Task task)
+                props.Add(key, await (task as dynamic)); // TODO: find a solution to avoid dynamic
+            else
+                props.Add(key, computed);
         }
 
         return props;
