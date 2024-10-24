@@ -21,4 +21,17 @@ public class LocationResult(string url) : IActionResult
 
         await new RedirectResult(url).ExecuteResultAsync(context);
     }
+
+    public void ExecuteResult(HttpContext httpContext)
+    {
+        if (httpContext.IsInertiaRequest())
+        {
+            httpContext.Response.Headers.Append("X-Inertia-Location", url);
+            httpContext.Response.StatusCode = (int)HttpStatusCode.Conflict;
+        }
+        else
+        {
+            httpContext.Response.Redirect(url);
+        }
+    }
 }
