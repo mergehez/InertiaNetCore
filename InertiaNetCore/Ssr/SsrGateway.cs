@@ -11,7 +11,7 @@ internal class SsrGateway(IHttpClientFactory httpClientFactory, IOptions<Inertia
     {
         var json = options.Value.Json.Serialize(model);
         
-        var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
 
         var client = httpClientFactory.CreateClient();
         var response = await client.PostAsync(url, content);

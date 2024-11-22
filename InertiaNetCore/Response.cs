@@ -26,7 +26,7 @@ public class Response(string component, InertiaProps props, string? version, Ine
             DeferredProps = GetDeferredProps(context),
             MergeProps = GetMergeProps(context),
             ClearHistory = clearHistory,
-            EncryptHistory = encryptHistory ?? options.EncryptHistory
+            EncryptHistory = encryptHistory ?? _options.EncryptHistory
         };
 
         if (!context.HttpContext.IsInertiaRequest())
