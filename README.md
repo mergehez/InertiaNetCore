@@ -8,7 +8,7 @@ This library is a fork of [kapi2289/InertiaCore](https://github.com/kapi2289/Ine
 
 Some errors were fixed, and unnecessary dependencies were removed. The library will be maintained and updated whenever necessary.
 
-It is compatible with .NET 7 and .NET 8. As soon as .NET 9 is released, the library will be updated to support it.
+It is compatible with .NET 7, .NET 8, and .NET 9.
 
 Feel free to contribute to the project by creating issues or pull requests.
 
