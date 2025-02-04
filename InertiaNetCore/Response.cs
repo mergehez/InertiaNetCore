@@ -66,12 +66,13 @@ public class Response(string component, InertiaProps props, string? version, Ine
                     ?? InertiaFlashMessages.FromSession(context.HttpContext);
         var errors = GetErrors(context);
 
-        var finalProps = await props.ToProcessedProps(isPartial, partials, excepts);
+        var finalProps = await props
+            .Merge(shared?.GetData())
+            .AddFlash(flash.GetData())
+            .ToProcessedProps(isPartial, partials, excepts);
 
         finalProps = finalProps
-            .Merge(shared?.GetData())
             .AddTimeStamp()
-            .AddFlash(flash.GetData())
             .AddErrors(errors);
 
         flash.Clear(false);
@@ -90,10 +91,10 @@ public class Response(string component, InertiaProps props, string? version, Ine
             if (value is IDeferredProp deferredProp)
                 tmp[key] = deferredProp.Group ?? $"{key}_{Random.Shared.Next()}";
         }
-        
+
         // apply json serialization options to dictionary keys before grouping them
         tmp = JsonSerializer.Deserialize<Dictionary<string, string>>(_options.Json.Serialize(tmp));
-        
+
         return tmp!
             .GroupBy(prop => prop.Value)
             .ToDictionary(
@@ -107,16 +108,16 @@ public class Response(string component, InertiaProps props, string? version, Ine
         var resetData = context.GetInertiaResetData();
 
         var tmp = new Dictionary<string, string>();
-        
+
         foreach (var (key, value) in props)
         {
             if (value is IMergeableProp { Merge: true } && !resetData.Contains(key))
                 tmp[key] = key;
         }
-        
+
         // apply json serialization options to dictionary keys before grouping them
         tmp = JsonSerializer.Deserialize<Dictionary<string, string>>(_options.Json.Serialize(tmp));
-        
+
         return tmp!.Select(prop => prop.Key).ToList();
     }
 
