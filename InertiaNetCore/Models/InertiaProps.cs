@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using InertiaNetCore.Utils;
 
 namespace InertiaNetCore.Models;
@@ -18,14 +19,33 @@ public class InertiaProps : Dictionary<string, object?>
             
             if(isPartial && value is not IAlwaysProp && !partials.Contains(key, StringComparer.InvariantCultureIgnoreCase))
                 continue;
+
+            // if (value is Delegate dd)
+            // {
+            //     var bb = dd.DynamicInvoke();
+            //     if (bb is AsyncTaskMethodBuilder<dynamic> bbb)
+            //     {
+            //         bb = await bbb.Task;
+            //     }
+            // }
             
             var computed = value switch
             {
+                Func<Task<IEnumerable<object>>> f => await f.Invoke(),
+                Func<Task<object>> f => await f.Invoke(),
                 Func<object?> f => f.Invoke(),
+                Task<object> t => await t,
+                Task<IEnumerable<object>> t => await t,
                 Delegate d => d.DynamicInvoke(),
                 IInvokableProp l => await l.InvokeToObject(),
                 _ => value
             };
+            
+            if (computed is AsyncTaskMethodBuilder<object> a)
+                computed = await a.Task;
+            
+            // if(computed is AsyncStateMachineBox asm)
+            //     computed = await asm.GetResult();
 
             if (computed is Task task)
                 props.Add(key, await (task as dynamic)); // TODO: find a solution to avoid dynamic
