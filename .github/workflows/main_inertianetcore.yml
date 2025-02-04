@@ -16,13 +16,13 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.x'
+          dotnet-version: '9.x'
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
         
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{github.workspace}}/publish --framework=net8.0
+        run: dotnet publish -c Release -o ${{github.workspace}}/publish --framework=net9.0
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
