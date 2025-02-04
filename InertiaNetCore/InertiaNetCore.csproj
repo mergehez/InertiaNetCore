@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.0.14</Version>
+        <Version>0.0.15</Version>
         <TargetFrameworks>net7.0;net8.0;net9.0</TargetFrameworks>
         <LangVersion>preview</LangVersion>
         <PackageId>InertiaNetCore</PackageId>
@@ -13,16 +13,16 @@
         <RepositoryType>git</RepositoryType>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageTags>Inertia,Inertia.js,Asp.Net Core,Vue,Frontend</PackageTags>
+        <PackageTags>Inertia;Inertia.js;Asp.NetCore;Middleware;Vue;Frontend;C#;.Net;React</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="../README.md" Pack="true" PackagePath="" />
-        <None Include="../LICENSE" Pack="true" PackagePath="" />
+        <None Include="../README.md" Pack="true" PackagePath=""/>
+        <None Include="../LICENSE" Pack="true" PackagePath=""/>
     </ItemGroup>
 </Project>
